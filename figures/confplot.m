@@ -60,25 +60,28 @@ if (nargin >= 5)
  spec = 'ok';
 end % 
 
+%
+defaultImgSetting;
 
-p = plot(x,y,x,z1,x,z2);    YLIM = get(gca,'YLim');    delete(p);
-a1 = area(x,z1,min(YLIM)); 
+
+a = fill([x fliplr(x)],[z2 fliplr(z1)],[0.6 0.6 0.6]);
+set(a,'FaceAlpha',0.5);
+set(a,'LineStyle','none');
 hold on;
-set(a1,'LineStyle','none');     set(a1,'FaceColor',[0.9 0.9 0.9]);
-a2 = area(x,z2,min(YLIM)); 
-set(a2,'LineStyle','none');     set(a2,'FaceColor',[1 1 1]);
+
+
 if (~isempty(spec)),     
- spec = sprintf('p = plot(x,y,varargin{5}');
+ spec = sprintf('p = myplot(x,y,varargin{5}');
  for i=6:nargin,  spec = sprintf('%s,varargin{%d}',spec,i); end % for
  spec = sprintf('%s);',spec);
  eval(spec);
-else                     p = plot(x,y); 
+else                     p = myplot(x,y); 
 end;
 hold off;
 
 %set(gca,'Layer','top','XGrid','on','YGrid','on');               
-set(gca,'Layer','top');               
+set(gca,'Box','off');               
 
-H = [p, a1, a2];
+H = [p, a];
 
 if (nargout>1) varargout{1} = H; end;
