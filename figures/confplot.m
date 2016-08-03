@@ -22,7 +22,7 @@ function varargout = confplot(varargin)
 %   See also ERRORBAR, SEMILOGX, SEMILOGY, LOGLOG, PLOTYY, GRID, CLF, CLC, TITLE,
 %   XLABEL, YLABEL, AXIS, AXES, HOLD, COLORDEF, LEGEND, SUBPLOT, STEM.
 %
-%     © 2002 - Michele Giugliano, PhD (http://www.giugliano.info) (Bern, Monday Nov 4th, 2002 - 19:02)
+%     ï¿½ 2002 - Michele Giugliano, PhD (http://www.giugliano.info) (Bern, Monday Nov 4th, 2002 - 19:02)
 %    (bug-reports to michele@giugliano.info)
 %   $Revision: 1.0 $  $Date: 2002/11/11 14:36:08 $
 %                        
@@ -65,7 +65,7 @@ defaultImgSetting;
 
 
 a = fill([x fliplr(x)],[z2 fliplr(z1)],[0.6 0.6 0.6]);
-set(a,'FaceAlpha',0.5);
+set(a,'FaceAlpha',0.25);
 set(a,'LineStyle','none');
 hold on;
 
@@ -79,6 +79,7 @@ else                     p = myplot(x,y);
 end;
 hold off;
 
+set(a,'FaceColor',get(p,'Color'));
 %set(gca,'Layer','top','XGrid','on','YGrid','on');               
 set(gca,'Box','off');               
 
