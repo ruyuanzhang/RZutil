@@ -1,7 +1,6 @@
 function varargout = confplot(varargin)
 %CONFPLOT Linear plot with continuous confidence/error boundaries.
-%
-%   CONFPLOT(X,Y,L,U) plots the graph of vector X vs. vector Y with
+% CONFPLOT(X,Y,L,U) plots the graph of vector X vs. vector Y with
 %   'continuous' confidence/error boundaries specified by the vectors
 %   L and U.  L and U contain the lower and upper error ranges for each
 %   point in Y. The vectors X,Y,L and U must all be the same length.  
@@ -9,9 +8,16 @@ function varargout = confplot(varargin)
 %   CONFPLOT(X,Y,E) or CONFPLOT(Y,E) plots Y with error bars [Y-E Y+E].
 %   CONFPLOT(...,'LineSpec') uses the color and linestyle specified by
 %   the string 'LineSpec'.  See PLOT for possibilities.
-%
+%   
 %   H = CONFPLOT(...) returns a vector of line handles.
+% -----------------------------------
+%   Input:X,Y, input data, L, U, lower and upper error range, Note,here L
+%   and U must be positive.
 %
+%-----------------------------------
+%   Output:H=[p,a]; P is handel of line plot, area is handel of area.
+%
+%----------------------------------
 %   For example,
 %      x = 1:0.1:10;
 %      y = sin(x);
@@ -22,9 +28,8 @@ function varargout = confplot(varargin)
 %   See also ERRORBAR, SEMILOGX, SEMILOGY, LOGLOG, PLOTYY, GRID, CLF, CLC, TITLE,
 %   XLABEL, YLABEL, AXIS, AXES, HOLD, COLORDEF, LEGEND, SUBPLOT, STEM.
 %
-%     � 2002 - Michele Giugliano, PhD (http://www.giugliano.info) (Bern, Monday Nov 4th, 2002 - 19:02)
-%    (bug-reports to michele@giugliano.info)
-%   $Revision: 1.0 $  $Date: 2002/11/11 14:36:08 $
+%   2016/08/03,created by Ruyuan Zhang, based on confplot function by
+%   Oh-sang Kwon.
 %                        
 
 if (nargin<2)

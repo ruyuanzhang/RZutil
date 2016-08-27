@@ -5,7 +5,8 @@ function mycd(pathname)
 %   main path
 %       main = '~/Documents/git';
 %
-
+% example:
+% mycd('util');
 if(~exist('pathname','var') || isempty(pathname))
     error('Please input the correct pathname mask');
 end
