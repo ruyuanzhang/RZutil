@@ -30,7 +30,7 @@ end
 
 
 
-designMatrix = sparse(timePoint,stimCond,ones(size(timePoint)),numTr,condNum,numTr);
+designMatrix = sparse(timePoint,stimCond,ones(size(stimCond)),numTr,condNum,numTr);
 
 
 
