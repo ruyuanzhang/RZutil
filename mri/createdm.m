@@ -15,6 +15,7 @@ function designMatrix=createdm(timePoint,stimCond,numTr,condNum)
 %   stimCond = 1:numel(timePoint);
 %   designMatrix = createdm(timePoint,stimCond,50);
 %   figure;imagesc(designMatrix);colormap(gray);
+
 if ~exist('timePoint','var')||isempty(timePoint)
     error('Please input the stimulus onset time');
 end
