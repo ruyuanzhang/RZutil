@@ -31,4 +31,6 @@ set(groot,'defaultErrorBarLineStyle','none');
 set(groot,'defaultErrorBarColor',[0 0 0]);
 set(groot,'defaultErrorBarLineWidth',1.5);
 
+%default figure setting
+set(groot,'defaultFigurePaperPositionMode','auto');
 end

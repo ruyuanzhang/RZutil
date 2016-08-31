@@ -1,4 +1,4 @@
-function fig=figrmwhitespace(fig,row,col,space)
+function fig=figrmwhitespace(fig,row,col,space,axesNum)
 % fig=figrmwhitespace(fig,row,col,space)
 % remove some redundent white space when using multiple subplot
 % -------------------------------------------------------------------------
@@ -42,9 +42,17 @@ end
 if(~exist('space','var') || isempty(space))
     space = [0 0 0 0.005];
 end
-
+if (~exist('axesNum','var'))||isempty(axesNum)
+    axesNum = [];
+end
 
 item=get(fig,'Child');
+
+if ~isempty(axesNum)
+    item=item(axesNum);
+end
+
+
 k=0;
 for i = numel(item):-1:1
     

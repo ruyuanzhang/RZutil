@@ -1,20 +1,20 @@
-function designMatrix=createdm(timePoint,stimCond,numTr,condNum)
-%designMatrix=createdm(timePoint,condition,numTr,conditionNumber,)
-% create design matrix, output is a sparse matrix
+function designMat=createdm(timePoint,stimCond,numTR,condNum)
+%designMat=createdm(timePoint,condition,numTr,conditionNumber,)
+% create design matrix, output is a sparse double matrix
 % Input:
-%       timePoint:a vector containing stimulus onset time points,secs;
-%       condition: a vector of stimulus conditions;
+%       timePoint:a vector containing stimulus onset time points,in number of TR;
+%       condition: a vector of stimulus conditions, the size is the same as timePoint;
 %       numTr:number of total TR in this run
 %   optional:
-%       conditionNumer: how many unique stimulus condition in this run
+%       condNum: how many unique stimulus condition in this run
 % Output:
-%       designMatrix: obtained design Matrix, in sparse matrix mode;
+%       designMat: obtained design Matrix, in sparse matrix mode;
 %
 % example:
 %   timePoint= 1:4:100;
 %   stimCond = 1:numel(timePoint);
-%   designMatrix = createdm(timePoint,stimCond,50);
-%   figure;imagesc(designMatrix);colormap(gray);
+%   designMat = createdm(timePoint,stimCond,numTR);
+%   figure;imagesc(designMat);colormap(gray);
 
 if ~exist('timePoint','var')||isempty(timePoint)
     error('Please input the stimulus onset time');
@@ -22,18 +22,28 @@ end
 if ~exist('stimCond','var')||isempty(stimCond)
     error('Please input the stimulus condition vector');
 end
-if ~exist('numTr','var')||isempty(numTr)
-    error('Please input the total TR in this run');
+if ~exist('numTR','var')||isempty(numTR)
+    error('Please input total number of TR in this run');
 end
 if ~exist('condNum','var')||isempty(condNum)
-    condNum = numel(unique(stimCond));
+    condNum=numel(unique(stimCond));
 end
 
 
 
-designMatrix = sparse(timePoint,stimCond,ones(size(stimCond)),numTr,condNum,numTr);
+%dealing with blanktrials
+tmp=stimCond;
+if any(stimCond==0)
+    tmp(stimCond==0)=condNum;
+end
 
+designMat = zeros(numTR,condNum);
+ind=sub2ind(size(designMat),timePoint,tmp);
+designMat(ind)=1;
 
-
+if any(stimCond==0)
+    designMat = designMat(:,1:end-1);% delete the blank trial condition;
+end
+designMat = sparse(designMat);
 
 end
