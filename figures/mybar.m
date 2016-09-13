@@ -27,6 +27,7 @@ function [Hb,He,ax]= mybar(x,y,E)
 
 if nargin < 3||isempty(E)
     E = [];
+
 elseif nargin <2 || isempty(y)
     error('please input the Y value !');
 elseif isempty(x)
@@ -59,9 +60,15 @@ for i = 1:numbars
       xLoc_errorbar(i,:) = xLoc_bar  - groupwidth/2 + (2*i-1) * groupwidth / (2*numbars);  % Aligning error bar with individual bar
       %errorbar(x, model_series(:,i), model_error(:,i), 'k', 'linestyle', 'none');
 end
+
+
+% add errorbar    
 if ~isempty(E)
     He = errorbar(xLoc_errorbar',y',E'); hold on;
+else
+    He=[];
 end
+
 set(gca,'Box','off');
 ax=gca;
 

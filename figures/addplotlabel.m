@@ -1,5 +1,5 @@
 function H=addplotlabel(fig,row,col,subplotnum,str,position)
-% function to add subplot label 'A.' 'B.' to generate publish-ready figures
+% function to add subplot label 'A' 'B' to generate publish-ready figures
 % Input:
 %       fig: figure handle
 %       row,col: row and colume number of all subplots
@@ -24,7 +24,7 @@ if(~exist('subplotnum','var') || isempty(subplotnum))
     error('Please input the number of the subplot');
 end
 if(~exist('str','var') || isempty(str))
-    str = 'A.';
+    str = 'A';
 end
 
 %%first figure

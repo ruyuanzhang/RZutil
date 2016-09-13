@@ -21,7 +21,7 @@ function [cah, sstruct] = mycorrelation(data1,data2,varargin)
 %                           %if not specified or empty, default is: {'r';'p'}
 %       fighandle    :  could be figure, axes handles
 %       confinterval: yes,draw 95% CI line, default: [];
-%       label   : lables for data 1 and data 2, default {'data1','data2'};
+%       labels   : lables for data 1 and data 2, default {'data1','data2'};
 %       linelrange: the range of the linear line; default: axex limits;
 %
 %
@@ -91,7 +91,7 @@ markersize = 8;
 
 %plot scatter plot
 hold(cah,'on');
-ph=myplot(cah,data1,data2,'ok','markersize',markersize);
+ph=myplot(cah,data1,data2,'o','markersize',markersize);
 
 
 %compute correlation
@@ -105,9 +105,9 @@ a = axis(cah);
 
 %plot the correlation line
 if isempty(options.linerange)
-    ph=myplot(cah,a(1:2), polyval(polyCoefs,a(1:2)),'-k','LineWidth',2);
+    ph=myplot(cah,a(1:2), polyval(polyCoefs,a(1:2)),'-','LineWidth',2,'Color',get(ph,'Color'));
 else
-    ph=myplot(cah,options.linerange(1:2), polyval(polyCoefs,options.linerange(1:2)),'-k','LineWidth',2);
+    ph=myplot(cah,options.linerange(1:2), polyval(polyCoefs,options.linerange(1:2)),'-','LineWidth',2,'Color',get(ph,'Color'));
 end
 
 if  isequal(options.confinterval,'yes')% Add 95% CI lines
@@ -115,10 +115,10 @@ if  isequal(options.confinterval,'yes')% Add 95% CI lines
 	[yfit, delta] = polyconf(polyCoefs,xfit,S);
 	h = [plot(cah,xfit,yfit+delta);...
 		plot(cah,xfit,yfit-delta)];
-	set(h,'color',[0.6 0.6 0.6],'linestyle','-');
+	set(h,'color',get(ph,'Color'),'linestyle','-');
 end
 
-corrtext = {};
+corrtext = {};  
 for i=1:length(options.corrinfo)
 	switch lower(options.corrinfo{i})
 		case 'eq', corrtext = [corrtext; ['y=' num2str(polyCoefs(1),3) 'x+' num2str(polyCoefs(2),3)]];
@@ -131,7 +131,7 @@ for i=1:length(options.corrinfo)
 		case 'n', corrtext = [corrtext; ['n=' num2str(N)]];
 	end
 end
-texthandle=text(a(1)+0.01*(a(2)-a(1)),a(3)+0.9*(a(4)-a(3)),corrtext,'parent',cah,'FontSize',15,'FontName','Arial');
+texthandle=text(a(1)+0.01*(a(2)-a(1)),a(3)+0.9*(a(4)-a(3)),corrtext,'parent',cah,'FontSize',15,'FontName','Arial','Color',get(ph,'Color'));
 %set(texthandle,'FontName','Arial');
 %set(texthandle,'FontSize',13);
 

@@ -9,8 +9,6 @@ defaultImgSetting;
 
 
 H = errorbar(varargin{:});
-
-
 % add some setting
 set(gca,'box','off');
 
