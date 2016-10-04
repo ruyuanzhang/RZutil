@@ -29,6 +29,9 @@ if ~exist('condNum','var')||isempty(condNum)
     condNum=numel(unique(stimCond));
 end
 
+if condNum~=numel(unique(stimCond))
+    error('Your input conditio Number seems incorrect, double check!');
+end
 
 
 %dealing with blanktrials
