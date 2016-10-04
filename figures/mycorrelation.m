@@ -91,7 +91,7 @@ markersize = 8;
 
 %plot scatter plot
 hold(cah,'on');
-ph=myplot(cah,data1,data2,'o','markersize',markersize);
+ph=myplot(cah,data1,data2,'o','markersize',markersize,'Color',[0 0 0]);
 
 
 %compute correlation
