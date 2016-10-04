@@ -9,5 +9,5 @@ H = plot(varargin{:});
 
 % add some settings
 set(gca, 'box','off');
-set(H,'MarkerSize',8);
+%set(H,'MarkerSize',8);
 set(H,'LineWidth',2);
