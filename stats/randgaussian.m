@@ -1,4 +1,4 @@
-function sample = randg(sz,u,sigma)
+function sample = randgaussian(sz,u,sigma)
 
 % u: mean
 % sigma: standard devition
