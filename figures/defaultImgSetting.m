@@ -24,7 +24,7 @@ set(rootind,'DefaultAxesBox','off');
 set(rootind,'DefaultAxesLooseInset',[0 0 0 0]); %remove the surrounding white space when make figures.
 set(rootind,'DefaultAxesNextPlot','add'); %remove the surrounding white space when make figures.
 set(rootind,'DefaultAxesColorOrder',mycolororder('color'));
->>>>>>> dev
+
 
 %Default text seting
 set(rootind,'defaultTextFontSize',15);

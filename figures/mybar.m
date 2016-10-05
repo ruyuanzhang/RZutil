@@ -16,7 +16,7 @@ function [Hb,He,ax]= mybar(x,y,E)
 %     y: bar height values, it should be a m (bars) * n (condition)
 %      matrix
 %     E: length of error bar,it should be a m (bars) * n (condition)
-%      matrix
+%      matrix. Or it should a m (bars) * n (condition) * 2 (UB/LB) matrix
 %
 %
 %  i.e.
@@ -65,7 +65,11 @@ end
 
 % add errorbar    
 if ~isempty(E)
-    He = errorbar(xLoc_errorbar',y',E'); hold on;
+    if size(E,3)==1
+        He = errorbar(xLoc_errorbar',y',E'); hold on;
+    elseif size(E,3)==2
+        He = errorbar(xLoc_errorbar',y',E(:,:,1)',E(:,:,2)'); hold on;
+    end
 else
     He=[];
 end
