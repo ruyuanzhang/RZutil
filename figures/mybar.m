@@ -19,7 +19,8 @@ function [Hb,He,ax]= mybar(x,y,E)
 %      matrix
 %
 %
-%  Example; 
+%  i.e.
+% figure; x=rand(2,4);y=rand(2,4),E=rand(2,4)/3;[Hb,He,ax]= mybar(x,y,E)
 %       [Hb,He,ax]= mybar(x,y,E)
 %       [Hb,He,ax]= mybar([],y,E)
 
@@ -48,7 +49,7 @@ else
 end
 colormap(gray);
 
-xLoc_bar = Hb(1,1).XData;
+xLoc_bar = get(Hb(1,1),'XData');
 
 %now compute the x location of each error bar 
 numbars = size(y,1); 
@@ -68,6 +69,8 @@ if ~isempty(E)
 else
     He=[];
 end
+set(He,'LineStyle','none');%for unix
+set(He,'Color',[0 0 0]);%for unix
 
 set(gca,'Box','off');
 ax=gca;

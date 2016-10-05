@@ -28,7 +28,6 @@ end
 
 
 
-
 df1=numpara1-numpara2;
 df2=numdata-numpara1;
 
