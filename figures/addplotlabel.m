@@ -10,6 +10,14 @@ function H=addplotlabel(fig,row,col,subplotnum,str,position)
 %
 % Output:
 %       H:handle of the annotation
+% example;
+% H=figure;
+% ax(1)=subplot(1,2,1),myplot(rand(1,10));
+% ax(2)=subplot(1,2,2),myplot(rand(1,10));
+% addplotlabel(gcf,1,2,1,'A');
+% addplotlabel(gcf,1,2,2,'B');
+% figrmwhitespace(ax,1,2,[0 0 0 0.1]); % give some space for
+
 
 if(~ishandle(fig) || (isempty(fig)))
     fig=gcf;

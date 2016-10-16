@@ -24,7 +24,7 @@ function grating = createGrating(radius,varargin)
 %                   'Gaussian',which is 2D gaussian evenlop;
 %                   'Circular', a 2D circular envelope
 %   sptatialMaskGaussian,
-%   temporal_mask:  temporal evenlope, defailt, square evenlope
+%   temporal_mask:  temporal evenlope, default, square evenlope
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Example;
@@ -35,7 +35,6 @@ function grating = createGrating(radius,varargin)
 
 %things to do
 %   1.implmente temporal envelope function
-%   2.
 
 % Updated RZ 05-02-16
 %   Wrote the function
@@ -56,7 +55,7 @@ options = struct(...
         'scaleFactor',2,...
         'spatialMaskType','cosine',...
         'spatialMaskGaussianSigma',2,...
-        'mvLength',60,...
+        'mvLength',1,...
         'temporalMask',[],...
         'temporalMaskGaussianSigma',[]);
 

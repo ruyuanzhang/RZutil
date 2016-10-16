@@ -4,6 +4,7 @@ function sample=bootresample(x)
 
 ind=ceil(rand(1,length(x(:)))*length(x(:)));
 sample=x(ind);
+sample
 sample=reshape(sample,size(x));
     
 end

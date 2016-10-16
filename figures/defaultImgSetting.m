@@ -8,22 +8,22 @@ switch computer
         rootind = 0;
     case 'MACI64'
         rootind = groot;
-end
-    
-
+end    
 
 %%
 
 %Default axes setting
-set(rootind,'DefaultAxesFontSize',15);
-set(rootind,'DefaultAxesFontName','Arial');
-set(rootind,'DefaultAxesFontWeight','Bold');
-set(rootind,'DefaultAxesColor','none'); %set the background of plot area
-set(rootind,'DefaultAxesLineWidth',1.5);
-set(rootind,'DefaultAxesBox','off');
-set(rootind,'DefaultAxesLooseInset',[0 0 0 0]); %remove the surrounding white space when make figures.
-set(rootind,'DefaultAxesNextPlot','add'); %remove the surrounding white space when make figures.
-set(rootind,'DefaultAxesColorOrder',mycolororder('color'));
+set(rootind,'defaultAxesFontSize',15);
+set(rootind,'defaultAxesFontName','Arial');
+set(rootind,'defaultAxesFontWeight','Bold');
+set(rootind,'defaultAxesColor','none'); %set the background of plot area
+set(rootind,'defaultAxesLineWidth',1.5);
+set(rootind,'defaultAxesBox','off');
+set(rootind,'defaultAxesLooseInset',[0 0 0 0]); %remove the surrounding white space when make figures.
+set(rootind,'defaultAxesNextPlot','add'); %remove the surrounding white space when make figures.
+set(rootind,'defaultAxesColorOrder',mycolororder('color'));
+set(rootind,'defaultAxesTickDirMode','manual');
+set(rootind,'defaultAxesTickDir','out');
 
 
 %Default text seting
@@ -47,6 +47,7 @@ set(groot,'defaultLegendLocation','northwest');
 set(groot,'DefaultErrorBarLineStyle','none');
 set(groot,'DefaultErrorBarColor',[0 0 0]);
 set(groot,'DefaultErrorBarLineWidth',1.5);
+
 %Default legend setting
 set(groot,'DefaultLegendBox','off');
 set(groot,'DefaultLegendLocation','northwest');

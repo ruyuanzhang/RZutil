@@ -1,22 +1,32 @@
 function [sse, data_predict] =computeSSE(fun,params,data,input,scale)
 % compute SSE for fitting psychophysical data
-
+% Input:
+%       fun:function handle 
+%       params: parameters to estimate
+%       data: data to fit
+%       input: input for the funtion
+%   optional
+%       scale: in which scale the cost function lies, could be
+%       'linear'(default),'log'
+%
+%
 
 if(~isa(fun,'function_handle') || isempty(fun))
     error('You must give a function handle');
 end
-if(~exist(params,'var') || isempty(params))
+if(~exist('params','var') || isempty(params))
     error('please specify params of input data');
 end
-if(~exist(data,'var') || isempty(data))
+if(~exist('data','var') || isempty(data))
     error('please specify params of input data');
 end
-if(~exist(input,'var') || isempty(input))
+if(~exist('input','var') || isempty(input))
     error('please specify params of input data');
 end
-if(~exist(scale,'var') || isempty(scale))
+if(~exist('scale','var') || isempty(scale))
     scale='linear';
 end
+
 
 data_predict = feval(fun,params,input);
 
@@ -27,7 +37,5 @@ elseif strcmp(scale,'log')
 elseif strcmp(scale,'log10')
     sse=sum((log10(data_predict)-log10(data(:))).^2)/sum((log10(data(:))-mean(data(:))).^2);
 end
-
-
 
 end

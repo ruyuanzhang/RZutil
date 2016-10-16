@@ -14,14 +14,5 @@ set(gca,'box','off');
 
 
 
-% if ~any(varargin =='MakerSize')
-%     set(H,'MarkerSize',8);
-% end
-% 
-% if ~any(varargin =='LineWidth')
-%     set(H,'LineWidth',2);
-% end
-
-
 end
 

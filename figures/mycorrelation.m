@@ -84,14 +84,14 @@ else
 	error('What in tarnations is the handle that was passed to Bland-Altman????')
 end
 set(cah,'tag','Correlation Plot');
-set(groot,'defaultAxesFontName','Arial');
+
 %
 markersize = 8;
 %% Correlation
 
 %plot scatter plot
 hold(cah,'on');
-ph=myplot(cah,data1,data2,'o','markersize',markersize,'Color',[0 0 0]);
+ph=myplot(cah,data1,data2,'o','markersize',markersize);
 
 
 %compute correlation
