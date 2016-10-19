@@ -19,7 +19,7 @@ set(rootind,'defaultAxesFontWeight','Bold');
 set(rootind,'defaultAxesColor','none'); %set the background of plot area
 set(rootind,'defaultAxesLineWidth',1.5);
 set(rootind,'defaultAxesBox','off');
-set(rootind,'defaultAxesLooseInset',[0 0 0 0]); %remove the surrounding white space when make figures.
+%set(rootind,'defaultAxesLooseInset',[0 0 0 0]); %remove the surrounding white space when make figures.
 set(rootind,'defaultAxesNextPlot','add'); %remove the surrounding white space when make figures.
 set(rootind,'defaultAxesColorOrder',mycolororder('color'));
 set(rootind,'defaultAxesTickDirMode','manual');
