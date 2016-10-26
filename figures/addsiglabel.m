@@ -22,7 +22,7 @@ function [l,label]=addsiglabel(dot1,dot2,siglabel,axs,varargin)
 if ~exist('dot1','var')||isempty(dot1)
     error('Please input the label or line X data');
 end
-if ~exist('dot2','var')||isempty(dot2)||size(dot2)~=size(dot1)
+if ~exist('dot2','var')||isempty(dot2)||any(size(dot2)~=size(dot1))
     error('Please input the coorect label or line X data');
 end
 if ~exist('siglabel','var')||isempty(siglabel)
@@ -39,16 +39,23 @@ end
 if numel(dot1)>1
     l=line(dot1,dot2,'LineWidth',2,'Color',[0 0 0]);
 end
+
 %% add label
+
 spatialoff_x=0;spatialoff_y=0;
-if dot1(1)==dot1(2)
-spatialoff_x = range(axs.XLim)*0.01;
-end
-if dot2(1)~=dot2(2)
-spatialoff_y = range(axs.YLim)*0.01;
+if numel(dot1)>1
+    if dot1(1)==dot1(2)
+        spatialoff_x = range(axs.XLim)*0.01;
+    end
+    if dot2(1)~=dot2(2)
+        spatialoff_y = range(axs.YLim)*0.01;
+    end
+    label = text(sum(dot1)/2-spatialoff_x,sum(dot2)/2+spatialoff_y,siglabel);
+else
+    label = text(dot1-spatialoff_x,dot2+spatialoff_y,siglabel);
 end
 
-label = text(sum(dot1)/2-spatialoff_x,sum(dot2)/2+spatialoff_y,siglabel);
+
 
 if any(strcmp(siglabel,{'*','**','***'}))
     set(label,'FontSize',25,'HorizontalAlignment','center');

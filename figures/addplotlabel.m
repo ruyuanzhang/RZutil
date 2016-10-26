@@ -35,6 +35,8 @@ if(~exist('str','var') || isempty(str))
     str = 'A';
 end
 
+
+
 %%first figure
 a=1:row*col;
 a=reshape(a,col,row)';

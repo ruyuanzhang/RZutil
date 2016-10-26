@@ -1,4 +1,5 @@
 function [sse, data_predict] =computeSSE(fun,params,data,input,scale)
+% [sse, data_predict] =computeSSE(fun,params,data,input,scale)
 % compute SSE for fitting psychophysical data
 % Input:
 %       fun:function handle 
@@ -8,6 +9,10 @@ function [sse, data_predict] =computeSSE(fun,params,data,input,scale)
 %   optional
 %       scale: in which scale the cost function lies, could be
 %       'linear'(default),'log'
+%
+%Example;
+% figure;
+%
 %
 %
 
