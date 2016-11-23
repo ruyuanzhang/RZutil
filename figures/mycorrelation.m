@@ -1,5 +1,5 @@
 function [cah, sstruct] = mycorrelation(data1,data2,varargin)
-%% [cah, ssstruct] = Correlation(data1,data2,varargin)
+%% [cah, ssstruct] = mycorrelation(data1,data2,varargin)
 % Correlation, quickly compute and plot the correlation of two variables.
 %
 %   Inputs:
@@ -28,7 +28,7 @@ function [cah, sstruct] = mycorrelation(data1,data2,varargin)
 %%%%%%%%%%%%%%%%%%
 %Examples;
 %
-%
+%[h(1),s]=mycorrelation(corr(:,11),corr(:,3),'fighandle',h(1),'linerange',[],'labels',{'Overall MOT performance at post-test','N-back learning gain%'},'corrinfo',{'r'});
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 %history
 %Updated RZ 06/04/16

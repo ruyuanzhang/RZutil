@@ -73,8 +73,8 @@ if ~isempty(E)
 else
     He=[];
 end
-set(He,'LineStyle','none');%for unix
-set(He,'Color',[0 0 0]);%for unix
+%set(He,'LineStyle','none');%for unix
+%set(He,'Color',[0 0 0]);%for unix
 
 set(gca,'Box','off');
 ax=gca;

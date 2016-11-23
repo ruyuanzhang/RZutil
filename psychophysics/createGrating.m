@@ -13,7 +13,7 @@ function grating = createGrating(radius,varargin)
 %
 % Optional Inputs:
 %   orientation:    orientation of grating,in deg, default:0 deg, vertical
-%   sf:             spatial frequency in cyc/deg, default: 1 cycle/deg
+%   cpfov:          cycles per field of view
 %   contrast:       contrast, default:1, full contrast
 %   amplitude
 %   background:
