@@ -1,8 +1,14 @@
-function c0=mycolororder(type)
+function c0=mycolororder(theme,n)
 %two different types of color order when making figures
- 
+if (~exist('theme','var')||isempty(theme))
+    theme = 'color';
+end
 
-switch type
+if (~exist('n','var')||isempty(n))
+    n = 0;
+end
+
+switch theme
     case 'color'
         c0=[0    0.4470    0.7410
             0.8500    0.3250    0.0980
@@ -13,6 +19,11 @@ switch type
             0.6350    0.0780    0.1840];
     case 'gray'
         c0=linspace(0,1,7)'*ones(1,3);
-        
+    case 'jet'
 end
+
+if n > 7
+    c0=colorinterpolate(c0,n,1);
+end
+
 end

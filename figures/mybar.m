@@ -38,16 +38,13 @@ elseif size(x)~=size(y)
 end
 
 %
-defaultImgSetting;
-
-%
 %fig=figure;
 if isempty(x)
     Hb = bar(y'); hold on;
 else
     Hb = bar(x',y'); hold on;
 end
-colormap(gray);
+
 
 xLoc_bar = get(Hb(1,1),'XData');
 

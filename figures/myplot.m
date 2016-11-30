@@ -10,8 +10,7 @@ function H = myplot(varargin)
 %   
 % 2016/11/11 RZ added tag input option
 
-%run default image settings
-defaultImgSetting;
+
 
 
 H = plot(varargin{:});
