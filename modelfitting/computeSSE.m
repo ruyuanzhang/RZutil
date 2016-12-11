@@ -1,15 +1,16 @@
 function [sse, data_predict] =computeSSE(fun,data,scale,params,varargin)
-% [sse, data_predict] =computeSSE(fun,params,data,input,scale)
+% [sse, data_predict] =computeSSE(fun,data,scale,params,varargin)
 % compute SSE for fitting psychophysical data
 % Input:
 %       fun:function handle, when you define the function, please set parameters as the first input argeument
 %           e.p. linear(params,x1,x2...)
-%       params: parameters to estimate
 %       data: data to fit
-%       input: input for the funtion
-%   optional
-%       scale: in which scale the cost function lies, could be
-%       'linear'(default),'log'
+%       scale(optional): in which scale the cost function lies, could be 'linear'(default),'log'
+%       params: parameters to estimate
+%       varargin: input for the fitting funtion
+% Output:
+%       sse: compute sse
+%       data_predict: predicted_data
 %
 %Example:
 % func = @(params,x,y) params(1)*x+y+params(2); % remember the first input is parameters
@@ -31,7 +32,7 @@ if(~exist('params','var') || isempty(params))
     error('please specify params of input data');
 end
 if(~exist('varargin','var') || isempty(varargin))
-    error('please specify params of input data');
+    error('please specify input for the fitting function');
 end
 
 

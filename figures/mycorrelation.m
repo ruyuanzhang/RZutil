@@ -11,6 +11,8 @@ function [cah, sstruct] = mycorrelation(data1,data2,varargin)
 %   Optional Inputs:
 %       corrinfo: specifies what information to display on the correlation chart as a cell of string in 
 %                   order of top to bottom. The following codes are available:
+%                   if not specified or empty, default is: {'r';'p'}
+%
 %                   - 'eq'     slope and intercept equation
 %                   - 'int%'   intercept as % of mean values
 %                   - 'r'      pearson r-value
@@ -46,16 +48,16 @@ s = size(data1);
 if ~isequal(s,size(data2));
 	error('data1 and data2 must have the same size');
 end
+%default
 options = struct(...
         'corrinfo', {{'r','p'}},...
         'fighandle',[],...
         'confinterval',[],...
-        'labels',{{'data1','data2'}},...
-        'linerange',[]);
+        'labels',{{'',''}},...
+        'linerange',[],...
+        'lineonly',0);
         
-    
-    
-    
+       
 %% parse options
 input_opts=mergestruct(varargin{:});
 fn=fieldnames(input_opts);
@@ -71,9 +73,8 @@ end
 
 % deal with figure issue
 if isempty(options.fighandle)
-	fig = figure;
-    defaultImgSetting;
-	cah = axes;
+	fig = gcf;
+	cah = gca;
 elseif strcmpi(get(options.fighandle,'type'),'figure')
 	fig = options.fighandle;%update figure handle;
     cah = get(fig,'Children');     
@@ -91,23 +92,25 @@ markersize = 8;
 
 %plot scatter plot
 hold(cah,'on');
-ph=myplot(cah,data1,data2,'o','markersize',markersize);
-
+ph=myplot(cah,data1,data2,'o','markersize',markersize,'tag','correlation dot');
+if options.lineonly == 1    
+    set(ph,'Marker','none');
+end
 
 %compute correlation
 % Linear regression
 [polyCoefs, S] = polyfit(data1,data2,1);
 [r, p] = corrcoef(data1,data2); r=r(1,2); p=p(1,2);
-rho = corr(data1,data2,'type','Spearman');
+rho = corr(data1,data2,'type','spearman');
 N = length(data1);
 SSE = sqrt(sum((polyval(polyCoefs,data1)-data2).^2)/(N-2));
 a = axis(cah);
 
 %plot the correlation line
 if isempty(options.linerange)
-    ph=myplot(cah,a(1:2), polyval(polyCoefs,a(1:2)),'-','LineWidth',2,'Color',get(ph,'Color'));
+    ph=myplot(cah,a(1:2), polyval(polyCoefs,a(1:2)),'-','LineWidth',2,'Color',get(ph,'Color'),'tag','correlation line');
 else
-    ph=myplot(cah,options.linerange(1:2), polyval(polyCoefs,options.linerange(1:2)),'-','LineWidth',2,'Color',get(ph,'Color'));
+    ph=myplot(cah,options.linerange(1:2), polyval(polyCoefs,options.linerange(1:2)),'-','LineWidth',2,'Color',get(ph,'Color'),'tag','correlation line');
 end
 
 if  isequal(options.confinterval,'yes')% Add 95% CI lines
@@ -131,7 +134,8 @@ for i=1:length(options.corrinfo)
 		case 'n', corrtext = [corrtext; ['n=' num2str(N)]];
 	end
 end
-texthandle=text(a(1)+0.01*(a(2)-a(1)),a(3)+0.9*(a(4)-a(3)),corrtext,'parent',cah,'FontSize',15,'FontName','Arial','Color',get(ph,'Color'));
+a = axis(cah);
+texthandle=text(a(1)+0.01*(a(2)-a(1)),a(4),corrtext,'parent',cah,'FontSize',15,'FontName','Arial','Color',get(ph,'Color'));
 %set(texthandle,'FontName','Arial');
 %set(texthandle,'FontSize',13);
 
