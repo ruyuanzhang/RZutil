@@ -1,6 +1,8 @@
-function [sse, data_predict] =computeSSE(fun,data,scale,params,varargin)
-% [sse, data_predict] =computeSSE(fun,data,scale,params,varargin)
-% compute SSE for fitting psychophysical data
+function [sse,r2, data_predict] = evalfitsse(fun,data,scale,params,varargin)
+% [sse, data_predict] =calsse(fun,data,scale,params,varargin)
+%
+% Evaluate a model fitting using sse metric
+%
 % Input:
 %       fun:function handle, when you define the function, please set parameters as the first input argeument
 %           e.p. linear(params,x1,x2...)
@@ -39,7 +41,6 @@ end
 data_predict = feval(fun,params,varargin{:});
 
 
-
 if strcmp(scale,'linear')
     sse=sum((data_predict(:)-data(:)).^2)/sum((data(:)-mean(data(:))).^2);
 elseif strcmp(scale,'log')
@@ -48,4 +49,5 @@ elseif strcmp(scale,'log10')
     sse=sum((log10(data_predict)-log10(data(:))).^2)/sum((log10(data(:))-mean(data(:))).^2);
 end
 
+r2=1-sse;
 end

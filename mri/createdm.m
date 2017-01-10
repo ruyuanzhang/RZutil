@@ -3,7 +3,8 @@ function designMat=createdm(timePoint,stimCond,numTR,condNum)
 % create design matrix, output is a sparse double matrix
 % Input:
 %       timePoint:a vector containing stimulus onset time points,in number of TR;
-%       condition: a vector of stimulus conditions, the size is the same as timePoint;
+%       condition: a vector of stimulus conditions correspondg to timePoint vector, the size is the same as timePoint
+%           indicating stimulus condition in each timepoint;
 %       numTr:number of total TR in this run
 %   optional:
 %       condNum: how many unique stimulus condition in this run

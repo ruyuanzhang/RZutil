@@ -1,4 +1,4 @@
-function H=addplotlabel(fig,row,col,subplotnum,str,position)
+function H=addsubplotlabel(fig,row,col,subplotnum,str,position)
 % function to add subplot label 'A' 'B' to generate publish-ready figures
 % Input:
 %       fig: figure handle

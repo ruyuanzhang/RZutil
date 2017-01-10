@@ -1,5 +1,14 @@
 function c0=mycolororder(theme,n)
 %two different types of color order when making figures
+% Input
+%   theme: color
+%   n: levels we want, default is 7, we can create more by color
+%       interpolate
+% Output:
+%   c0: a 3 x n matrix rgb value
+%   
+% future work: Improve the gray color set
+%
 if (~exist('theme','var')||isempty(theme))
     theme = 'color';
 end
