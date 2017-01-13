@@ -1,5 +1,5 @@
+function rmpathnow
 %%remove path
-
-%% it is a script
+warning('off','all');
 rmpath(genpath(pwd));
 savepath;

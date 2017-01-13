@@ -1,6 +1,6 @@
 %addpath now
 function addpathnow
-%% it is a script
+%% a simple function to add current folder into path but do not include .git folder
 
 warning('off','all');
 rmpath(genpath(pwd))
