@@ -43,7 +43,7 @@ p=myinputParser;
 % some key parameters, 
 addParameter(p,'data',[], @(x) validateattributes(x,{'numeric','cell'},{'nonempty'}));
 addParameter(p,'modelinput',[], @(x) validateattributes(x,{'numeric','cell'},{'nonempty'}));
-addParameter(p,'model',[], @(x) validateattributes(x,{'functional_handle'},{'nonempty'}));
+addParameter(p,'model',[], @(x) validateattributes(x,{'function_handle'},{'nonempty'}));
 addParameter(p,'init',[], @(x) validateattributes(x,{'numeric'},{'nonempty'})); % must provide a initial guess
 
 %
@@ -64,15 +64,14 @@ addParameter(p,'UB',defaultUB, @(x) validateattributes(x,{'numeric'},{'nonempty'
 addParameter(p,'scale',defaultScale, @(x) validateattributes(x,{'char'},{'nonempty'}));
 addParameter(p,'multiinit',defaultMetric,@(x) validateattributes(x,{'function_handle'},{'nonempty'}));
 parse(p,input);
-
+input=p.Results; % obtain parsed input
 %% read in input
-input=p.Results;
 
 % deal with metric
 metric = input.metric;
 scale  = input.scale;
 if isequal(metric,@calcsse)
-        assert(numel(data)>1,'only fit 1 data point, cannot calculate sse');        
+        assert(numel(input.data)>1,'only fit 1 data point, cannot calculate sse');        
 elseif ismember(metric,{@calccorrelation,@calccod})
         metric = @() 1-metric; % maxima correlation is equivelant minimize error
         % here has some problem.. need to fix;
@@ -97,6 +96,7 @@ init = input.init;
 options = input.opt;
 
 % here we use fminsearchbnd as our main optimize function
+
 [x,fval,exitflag,output]=fminsearchbnd(costfun,init,LB,UB,options);
 
 % save some output
