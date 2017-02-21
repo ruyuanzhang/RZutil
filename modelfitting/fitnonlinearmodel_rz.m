@@ -70,6 +70,7 @@ input=p.Results; % obtain parsed input
 % deal with metric
 metric = input.metric;
 scale  = input.scale;
+data = input.data;
 if isequal(metric,@calcsse)
         assert(numel(input.data)>1,'only fit 1 data point, cannot calculate sse');        
 elseif ismember(metric,{@calccorrelation,@calccod})
