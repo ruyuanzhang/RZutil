@@ -12,10 +12,8 @@ function [sse,r2] = calcsse(data,data_predict,scale)
 %                   then compute sse
 %
 % Output:
-%       sse: compute sse
+%       sse: the sse.
 %
-
-
 if(~exist('data','var') || isempty(data))
     error('please specify params of input data');
 end
@@ -27,13 +25,13 @@ if(~exist('scale','var') || isempty(scale))
 end
 
 %%check input
-assert(all(size(data)==size(data_predict)))
+assert(all(size(data)==size(data_predict)),'emprical data and predicted data should be same size!');
 
 %% change scale
 if scale
     % we will perform log transform, make sure all data > 0 
-    assert(all(flatten(data)>0),'log scale, make sure all data element > 0');
-    assert(all(flatten(data_predict)>0),'log scale, make sure all data element > 0');
+    assert(all(flatten(data)>0),'log scale, make sure input all data element > 0');
+    assert(all(flatten(data_predict)>0),'log scale, make sure all input data element > 0');
     data = log(data);
     data_predict = log(data_predict);
 end
@@ -41,6 +39,5 @@ end
 %% do it
 
 sse=sum((data_predict(:)-data(:)).^2)/sum((data(:)-mean(data(:))).^2);
-
 
 r2=1-sse;

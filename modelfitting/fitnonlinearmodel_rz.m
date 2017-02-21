@@ -4,8 +4,8 @@ function output = fitnonlinearmodel_rz(data,model,modelinput,init,varargin)
 % a simple wrapper fminsearch function for model fitting
 % Input:
 %   <positional argument>
-%       data: fitted data, can be
-%       model: constructed model outside of this function. Any function or
+%       data: data to be fit,
+%       model: To provide correct model is the key part here, constructed model outside of this function. Any function or
 %           model with multiple input argument can be rewritten as a
 %           generally two input, e.g. model(p,input).p is the parameter
 %           array,input is a cell array that include all other argument.
@@ -18,14 +18,20 @@ function output = fitnonlinearmodel_rz(data,model,modelinput,init,varargin)
 %               @calcleastsquare (default): minimize least square
 %               @calcsse : minimize sse
 %               @calccorrelation : maximize correlation
-%               
-
+%       opt: optional argument for optimize function, see defaultOpt variable below
+%       scale: on which scale we compute goodness of fit, 'linear' or 'log'
+%       LB,UB: LB and UB of parameters
+%       multiinit: multiple initial point
+% Ouput:
+%   
+% Example:
+%   
 % history
+%   01/17/2017. Ruyuan Zhang, finish some documentation.
+%   12/24/2016. Ruyuan Zhang 
+% Work to do: 
 %   1. implement multiple random initial values
 %   2. implement bootstrap and across validation
-%   12/24/2016. Ruyuan Zhang 
-% 
-
 
 %% deal with input
 p=myinputParser;
@@ -98,7 +104,6 @@ output.scale = scale;
 output.predictdata=model(x,modelinput);
 % compute other metric and save
 if numel(output.predictdata)>1
-    
     switch scale
         case 'linear'
             output.R2 = 1 - calcsse(data,output.predictdata);

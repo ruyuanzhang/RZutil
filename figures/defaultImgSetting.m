@@ -10,7 +10,11 @@ switch computer
         rootind = groot;
 end    
 
-%%
+
+%Default Figure level setting
+set(rootind,'DefaultFigureInvertHardCopy','off');
+set(rootind,'DefaultFigurePaperPositionMode','auto');
+set(rootind,'DefaultFigureColormap',parula);
 
 %Default axes setting
 set(rootind,'defaultAxesFontSize',15);
@@ -20,7 +24,7 @@ set(rootind,'defaultAxesColor','none'); %set the background of plot area
 set(rootind,'defaultAxesLineWidth',1.5);
 set(rootind,'defaultAxesBox','off');
 %set(rootind,'defaultAxesLooseInset',[0 0 0 0]); %remove the surrounding white space when make figures.
-set(rootind,'defaultAxesNextPlot','add'); %remove the surrounding white space when make figures.
+%set(rootind,'defaultAxesNextPlot','add'); %remove the surrounding white space when make figures.
 set(rootind,'defaultAxesTickDirMode','manual');
 set(rootind,'defaultAxesTickDir','out');
 

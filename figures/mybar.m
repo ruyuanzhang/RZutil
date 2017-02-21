@@ -16,7 +16,11 @@ function [Hb,He,ax]= mybar(x,y,E)
 %     y: bar height values, it should be a m (bars) * n (condition)
 %      matrix
 %     E: length of error bar,it should be a m (bars) * n (condition)
-%      matrix. Or it should a m (bars) * n (condition) * 2 (UB/LB) matrix
+%      matrix. Or it should a m (bars) * n (condition) * 2 (upper
+%      error/lower error) matrix.Notice, if y input is an 1xn array or nx1
+%      vector,E should be written as 1xnx2 or nx1x2 format, you can use
+%      reshape(E,[1 n 2]) or reshape(E,[n 1 2]);
+%   
 %
 %
 %  i.e.
@@ -62,9 +66,9 @@ end
 
 % add errorbar    
 if ~isempty(E)
-    if size(E,3)==1
+    if numel(E)==numel(y) %single error value
         He = errorbar(xLoc_errorbar',y',E'); hold on;
-    elseif size(E,3)==2
+    elseif numel(E)==2*numel(y) % up and low error value
         He = errorbar(xLoc_errorbar',y',E(:,:,1)',E(:,:,2)'); hold on;
     end
 else

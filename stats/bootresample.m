@@ -1,10 +1,13 @@
 function sample=bootresample(x)
-%% resample a vector or from a matrix for bootstrap
+% function sample=bootresample(x)
+% resample an array or from a matrix for bootstrap
+
+if ~exist('x','var')||isempty(x)
+    error('Please input an array or a cell vector to resample');
+end
 
 
-ind=ceil(rand(1,length(x(:)))*length(x(:)));
+ind=ceil(rand(1,numel(x(:)))*numel(x(:)));
 sample=x(ind);
-sample
-sample=reshape(sample,size(x));
-    
+sample=reshape(sample,size(x));    
 end

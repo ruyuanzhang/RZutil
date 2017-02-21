@@ -1,7 +1,8 @@
 function saveutilfile(filename,foldername,mode)
-% function moveutilfile(foldername)
+% function saveutilfile(filename,foldername,mode)
 % move a function in current folder to utility repository RZutil. This only
-% works when the file already exists in your current folder.
+% works when the file already exists in your current folder.Then this will
+% automatically update path of RZutil 
 %
 % Input:
 %   filename: name of the file you want to move.
@@ -32,7 +33,10 @@ if iscell(s)
     if numel(s)>1
         fprintf(sprintf('Multiple files ''%s'' exists,use which(%s,''-All'') to check \n',foldername,foldername));
         s=s{1};
+    else
+        s=s{1};
     end
+    
 end
 if mode==0
     movefile(s,dir);
