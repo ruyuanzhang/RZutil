@@ -29,6 +29,9 @@ if ~exist(dir,'file')
 end
 
 s = which(filename,'-ALL');
+if isempty(s)
+    error('No such file, check your input filename!');
+end
 if iscell(s)
     if numel(s)>1
         fprintf(sprintf('Multiple files ''%s'' exists,use which(%s,''-All'') to check \n',foldername,foldername));

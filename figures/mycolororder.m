@@ -7,12 +7,11 @@ function c0=mycolororder(theme,n)
 % Output:
 %   c0: a n x 3 matrix rgb value
 %   
-% future work: Improve the gray color set
+% future work: Improve the gray color set, to improve the contrast.
 %
 if (~exist('theme','var')||isempty(theme))
     theme = 'color';
 end
-
 if (~exist('n','var')||isempty(n))
     n = 7;
 end
@@ -30,8 +29,31 @@ switch theme
             c0=colorinterpolate(c0,ceil(n/7),2);
         end
             c0=c0(1:n,:);
+    case 'brightcolor' % this is default color order for 'bgrcmykw'
+        c0=[0    0    1
+            0    1    0
+            1    0    0
+            0    1    1
+            1    0    1
+            1    1    0
+            0    0    0];
+        if n > 7
+            c0=colorinterpolate(c0,ceil(n/7),1);
+        end
+        c0=c0(1:n,:);
+    case 'overcastsky' % this is default color order for 'bgrcmykw'
+        c0=[0,6,35
+            40,71,92
+            74,108,116
+            139,166,147
+            240,227,192]/255;
+        
+        if n > 5
+            c0=colorinterpolate(c0,ceil(n/5),1);
+        end
+        c0=c0(1:n,:);
     case 'gray'
-        c0=linspace(0,1,n)'*ones(1,3);
+        c0=gray(n);
     case 'jet'
         c0=jet(n);
 end
