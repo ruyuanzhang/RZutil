@@ -1,12 +1,15 @@
-function [randcondmat, condmat]=randomizedesign(trialnum,expcond)
+function [randcondmat, condmat]=getranddesign(trialnum,expcond)
 %
 % create a design matrix that randomize different conditions, this is
 % useful for psychphysics experiment.
 %
 % Input:
-%   trialnum: number of trials in this block
-%   expcond: a scaler or an array of experiment condition. i.e. there is 4
+%   trialnum: Total number of trial in this block, we assumed total trial
+%       number could be fully divided by exp condition number
+%   expcond: a scaler or an array of experiment condition. i.e. there are 4
 %           speed levels, 5 directions,3 locations.The expcond=[4 5 3].
+%
+%   
 % Output:
 %   randcondmat: randomized condition matrix. The first column is 1:trialnum. Then
 %           the other columns corresponding to expcond

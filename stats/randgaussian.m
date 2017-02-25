@@ -1,5 +1,8 @@
 function sample = randgaussian(sz,u,sigma)
-
+% function sample = randgaussian(sz,u,sigma)
+% just a wrapper of randn.m, get sz samples from a normal distribution with
+% mean as u and size as sigma;
+%   
 % u: mean
 % sigma: standard devition
 % sz:size of samples

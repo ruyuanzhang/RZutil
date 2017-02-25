@@ -23,6 +23,11 @@ function output=bootstrp2(nboot,bootfun,bootinput,otherparams)
 % betadiff=@(x,y,otherparams) nanmean(x)-nanmean(y)+otherparams;
 % dist = bootstrp2(1000,betadiff,{a,b},{3}); 
 % figure;hist(dist);
+%
+% Note:
+%   1. it uses bootsample.m function, it assumes sample with replacement
+%   2. cell also OK;
+%   3. use matrix and ignore cell case to make it faster??
 
 if(~exist('nboot','var') || isempty(nboot))
     nboot=1000;
