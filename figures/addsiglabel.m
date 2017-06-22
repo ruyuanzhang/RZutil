@@ -1,5 +1,5 @@
 function [l,label]=addsiglabel(dot1,dot2,siglabel,axs,varargin)
-%function [l,label]=addsiglabel(dot1,dot2,siglabel,axs)
+%function [l,label]=addsiglabel(dot1,dot2,siglabel,axs,varargin)
 % add horizontal line and significant label "*" or "**" to figure, mostly
 % bar figure, it can add a line if compare two condition or simply add a
 % sign to single bar
@@ -9,16 +9,17 @@ function [l,label]=addsiglabel(dot1,dot2,siglabel,axs,varargin)
 %       dot2: a scalar or a two-element vector of y data
 %   optional:
 %       siglabel: '*','**';default is '*'
-%       axs: the handel of axes
-%       varargin: varables for text;
+%       axs: the handle of axes
+%       varargin: varables for text object;
 % Output:
-%       l:line handel
+%       l:line handle
 %       label:text handel
 %
 % Example;
 % figure; [b,e,ax]=mybar([],rand(2,10),rand(2,10));
 % addsiglabel([e(1).XData(1) e(1).XData(2)],[1.5 1.5],'*');
 % addsiglabel([e(1).XData(3) e(1).XData(9)],[1.7 1.7],'**');
+%
 if ~exist('dot1','var')||isempty(dot1)
     error('Please input the label or line X data');
 end
@@ -31,8 +32,6 @@ end
 if ~exist('axs','var')||isempty(axs)
     axs=gca;
 end
-
-
 
 %% drawline if there are two dots, which means we are comparing two
 % conditions
@@ -66,11 +65,4 @@ end
 
 if ~isempty(varargin)
     set(label,varargin{:});
-end
-
-
-
-
-
-
 end

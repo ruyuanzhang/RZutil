@@ -59,7 +59,6 @@ assert(lapse >= 0);% lapse should >=0;
 
 %%
 if scale
-    
     assert(all(x>=1),'some stimulus input is less than 1, better use linear scale')% in log scale all input should be > 1, for values smaller than 1, like contrast, we use linear space.
     assert(threshold>1)% in log scale all input should be > 0
     x=log(x);

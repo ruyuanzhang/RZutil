@@ -1,16 +1,13 @@
 
 function [Hb,He,ax]= mybar(x,y,E)
-%This function is to plot a grouped bar figure with much easier efforts.And
-%I did a lot of optimization for overal controlling of the figure
-%properties.The key feature of this plot is to combine bar and errorbar
-%function and align the location of error bar to the grouped bars 
-%___________________________________________________________________________
-%  Output
-%     Hb: handle of the bar part
-%     He: handle of the errorbar part
-%     ax: handle of the ax part
-%__________________________________________________________________________
-%  Input
+% function [Hb,He,ax]= mybar(x,y,E)
+%
+% This function is to plot a grouped bar figure with much easier efforts.And
+% I did some optimizations for overal controlling of the figure
+% properties.The key feature of this plot is to combine bar and errorbar
+% function and align the location of error bar with the grouped bars 
+%
+% Input:
 %     x: x location of each bar, it should be a m (bars) * n (condition)
 %      matrix
 %     y: bar height values, it should be a m (bars) * n (condition)
@@ -20,27 +17,38 @@ function [Hb,He,ax]= mybar(x,y,E)
 %      error/lower error) matrix.Notice, if y input is an 1xn array or nx1
 %      vector,E should be written as 1xnx2 or nx1x2 format, you can use
 %      reshape(E,[1 n 2]) or reshape(E,[n 1 2]);
-%   
 %
+% Output:
+%     Hb: handle of the bar part
+%     He: handle of the errorbar part
+%     ax: handle of the ax part
 %
-%  i.e.
-% figure; x=rand(2,4);y=rand(2,4),E=rand(2,4)/3;[Hb,He,ax]= mybar(x,y,E)
-%       [Hb,He,ax]= mybar(x,y,E)
-%       [Hb,He,ax]= mybar([],y,E)
+% Note:
+%   The style of errorbar in this function is inherited from matlab
+%   errorbar function, see other errobar style in mybar2.m and mybar3.m
+%
+% Example:
+% figure; y=rand(2,4),E1 = 0.1*ones(1,4),E2=rand(2,4)/3;
+%   [Hb,He,ax]= mybar(1:4,y,E1)
+%   [Hb,He,ax]= mybar(1:4,y,E2)
+%   [Hb,He,ax]= mybar([],y,E2)
+%
+
+
 
 % dealing with inputs
-
 if nargin < 3||isempty(E)
     E = [];
-
 elseif nargin <2 || isempty(y)
     error('please input the Y value !');
 elseif isempty(x)
     x=[];
-elseif size(x)~=size(y)
-    error('dimentions of x and y do not match!')
 end
 
+% check dimension match
+if ~isempty(E)
+    assert(all(size(y) == subscript(size(E),[1,2])),'please input correct y and error dimensions');
+end
 %
 %fig=figure;
 if isempty(x)

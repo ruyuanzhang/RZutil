@@ -1,8 +1,12 @@
 function setdefaultcorder(cmap)
-%set default cmap
-%You can use 
-%parula,jet,hsv,hot,cool,spring,summer,autumn,winter,gray,bone,copper,pink,lines,colorcube,prism,flag,white
-%Example:
+% function setdefaultcorder(cmap)
+%
+% set default colormap, 
+% Input:
+% cmap: character, input colormap, You can use 
+% parula,jet,hsv,hot,cool,spring,summer,autumn,winter,gray,bone,copper,pink,lines,colorcube,prism,flag,white
+% 
+% Example:
 %   setdefaultcorder;
 %   setdefaultcorder(parula(5));
 %   figure;setdefaultcorder(parula(5));myplot(rand(3,4));

@@ -1,7 +1,15 @@
 %some Default setting when generating figures.
 %It seems not applicable in ubuntu.
 function defaultImgSetting
-
+% function defaultImgSetting
+% 
+% Run as a function in startup.m. This function customize various
+% properties of figures
+% 
+% Note:
+%   Starting from 2014b, matlab upgrades its figure system. This function
+%   is compatible with the version after 2014b and in generall compatible
+%   to OSX system, not great in linux.
 
 switch computer
     case 'GLNXA64'

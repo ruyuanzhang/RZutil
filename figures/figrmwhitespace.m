@@ -1,6 +1,8 @@
 function figrmwhitespace(item,row,col,space)
 % fig=figrmwhitespace(fig,row,col,space)
+%
 % remove some redundent white space when using multiple subplot
+%
 % -------------------------------------------------------------------------
 %   Input:
 %       row,col: number of rows and columns of this multiple plot figures

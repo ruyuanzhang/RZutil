@@ -1,33 +1,18 @@
 
 function [Hb,He,ax]= mybar2(x,y,E)
 % function [Hb,He,ax]= mybar2(x,y,E)
-%This function is to plot a grouped bar figure with much easier efforts.And
-%I did a lot of optimization for overal controlling of the figure
-%properties.The key feature of this plot is to combine bar and errorbar
-%function and align the location of error bar to the grouped bars 
-%___________________________________________________________________________
-%  Output
-%     Hb: handle of the bar part
-%     He: handle of the errorbar part
-%     ax: handle of the ax part
-%__________________________________________________________________________
-%  Input
-%     x: x location of each bar, it should be a m (bars) * n (condition)
-%      matrix
-%     y: bar height values, it should be a m (bars) * n (condition)
-%      matrix
-%     E: length of error bar,it should be a m (bars) * n (condition)
-%      matrix. Or it should a m (bars) * n (condition) * 2 (upper
-%      error/lower error) matrix.Notice, if y input is an 1xn array or nx1
-%      vector,E should be written as 1xnx2 or nx1x2 format, you can use
-%      reshape(E,[1 n 2]) or reshape(E,[n 1 2]);
+%
+% This function is another version of mybar.m see input and output
+% description in mybar.m
+% 
+% Note:
+%   This function uses myplot function to directly plot straight lines as
+%   errobar, seems to look prettier. see another version in mybar3.m
 %   
-%
-%
-%  Example:
-%  figure; x=rand(2,4);y=rand(2,4),E=rand(2,4)/3;[Hb,He,ax]= mybar(x,y,E)
-%       [Hb,He,ax]= mybar2(x,y,E)
-%       [Hb,He,ax]= mybar2([],y,E)
+% Example:
+%  figure; x=rand(2,4);y=rand(2,4),E=rand(2,4)/3;
+%  [Hb,He,ax]= mybar([],y,E);
+%  [Hb,He,ax]= mybar2(1:4,y,E)
 
 % dealing with inputs
 
@@ -75,13 +60,9 @@ for i = 1:numbars
           He=[];
       end
 end
-
-
 % add errorbar. We do not use default errorbar function in matlab. rather,
 % we simply plot a straight line on it. This seems looks prettier.
-
 set(flatten(He),'LineWidth',6*groupwidth);
-
 set(flatten(He),'Color',[0 0 0]);%for unix
 set(gca,'Box','off');
 ax=gca;

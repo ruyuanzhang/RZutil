@@ -1,35 +1,19 @@
 
 function [Hb,He,ax]= mybar3(x,y,E)
 % function [Hb,He,ax]= mybar3(x,y,E)
-% Similar as mybar,mybar2, the only difference is that we use bar function
-% to plot errorbar.
-%This function is to plot a grouped bar figure with much easier efforts.And
-%I did a lot of optimization for overal controlling of the figure
-%properties.The key feature of this plot is to combine bar and errorbar
-%function and align the location of error bar to the grouped bars 
-%___________________________________________________________________________
-%  Output
-%     Hb: handle of the bar part
-%     He: handle of the errorbar part
-%     ax: handle of the ax part
-%__________________________________________________________________________
-%  Input
-%     x: x location of each bar, it should be a m (bars) * n (condition)
-%      matrix
-%     y: bar height values, it should be a m (bars) * n (condition)
-%      matrix
-%     E: length of error bar,it should be a m (bars) * n (condition)
-%      matrix. Or it should a m (bars) * n (condition) * 2 (upper
-%      error/lower error) matrix.Notice, if y input is an 1xn array or nx1
-%      vector,E should be written as 1xnx2 or nx1x2 format, you can use
-%      reshape(E,[1 n 2]) or reshape(E,[n 1 2]);
-%   
+% 
+% Similar function to mybar.m and mybar2.m, see input and output
+% description in mybar.m
+
+% Note:
+%   instead, this function uses patch function to draw a errorbar. You can change the color and width of
+% errorbar.
 %
-%
-%  i.e.
-% figure; x=rand(2,4);y=rand(2,4),E=rand(2,4)/3;[Hb,He,ax]= mybar(x,y,E)
-%       [Hb,He,ax]= mybar(x,y,E)
-%       [Hb,He,ax]= mybar([],y,E)
+% Example:
+% x=rand(2,4);y=rand(2,4),E=rand(2,4)/3;
+% figure;[Hb,He,ax]= mybar([],y,E);
+% figure;[Hb,He,ax]= mybar2([],y,E);
+% figure;[Hb,He,ax]= mybar3([],y,E);
 
 % dealing with inputs
 
@@ -59,8 +43,7 @@ xLoc_bar = get(Hb(1,1),'XData');
 numbars = size(y,1); 
 groupwidth = min(0.8, numbars/(numbars+1.5));
 barwidth = get(Hb(1,1),'BarWidth');
-%errorbarwidth = groupwidth/numbars*barwidth*0.5; % errorbar size is half of the obsolute barwidth;
-errorbarwidth = barwidth*0.25; % errorbar size is half of the obsolute barwidth;
+errorbarwidth = 1/(numbars+1.5)*barwidth*0.5; % errorbar size is half of the obsolute barwidth;
 xLoc_errorbar=zeros(size(y));
 
 for i = 1:numbars

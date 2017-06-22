@@ -1,6 +1,8 @@
 function h = cpsfigure(row,col,ratio)
 %function h = cpsFigure(widthscale, heightscale,ratio)
+%
 % Scale the figure size according number of subplots
+%
 % Input:
 %   row,col: row number and col number of subplots
 %   ration(optional):overal ratio of the figure after scaling by row and
@@ -8,7 +10,7 @@ function h = cpsfigure(row,col,ratio)
 % Ouput:
 %   h: figure handle 
 % 
-% Example
+% Example:
 % cpsfigure(1,2);
 % subplot(1,2,1),myplot(rand(1,10));
 % subplot(1,2,1),myplot(rand(1,10));

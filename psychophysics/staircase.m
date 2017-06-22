@@ -358,9 +358,9 @@ elseif strcmpi(cmd,'plot')
         iR(1:length(ind))=ind; % if 1 longer than ind, it is the last trial
 
         x=xlim;
-        %h(3)=plot(iR,sc(i).reversal,'+k','markersize',8);
+        h(3)=plot(iR,sc(i).reversal,'+k','markersize',8);
         h(4)=line(x,[1 1]*sc(i).threshold(1),'color','m','LineStyle',':');
-        if i==1, legend(h,{'Correct' 'Wrong' 'Reversal' 'Threshold'}); end
+        if i==1, legend(h,{'Correct', 'Wrong', 'Reversal', 'Threshold'}); end
         if i==nsc, xlabel('Trial Number'); ylabel('Stimulus Value'); end
         if nsc>1
             y=ylim;

@@ -21,7 +21,7 @@ function output = fitnonlinearmodel_rz(input)
 %   
 % Example:
 %   
-%               @calcord: similar to calcsse,proportion of variance, the denominator is 
+%       @calcord: similar to calcsse,proportion of variance, the denominator is 
 %       optimoption: optimization options.
 %       LB: a 1xP vector, low bound during optimization,default:-1e6
 %       UB: a 1xP vector, up bound during optimization, default:1e6
@@ -34,10 +34,10 @@ function output = fitnonlinearmodel_rz(input)
 %           multiple p0, basically uniformly draw a sample between LB and
 %           UB, in this case, LB and UB should not include [],NaN or
 %           Inf/-Inf
-
-
-
-% history
+%
+%
+%
+% History
 %   01/17/2017. Ruyuan Zhang, finish some documentation.
 %   12/24/2016. Ruyuan Zhang 
 % Work to do: 

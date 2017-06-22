@@ -1,5 +1,8 @@
 function H=addsubplotlabel(fig,row,col,subplotnum,str,position)
-% function to add subplot label 'A' 'B' to generate publish-ready figures
+% function H=addsubplotlabel(fig,row,col,subplotnum,str,position)
+%
+% function to add subplot label 'A' 'B' to generate publication-ready figures
+%
 % Input:
 %       fig: figure handle
 %       row,col: row and colume number of all subplots
@@ -10,7 +13,8 @@ function H=addsubplotlabel(fig,row,col,subplotnum,str,position)
 %
 % Output:
 %       H:handle of the annotation
-% example;
+%
+% Example:
 % H=figure;
 % ax(1)=subplot(1,2,1),myplot(rand(1,10));
 % ax(2)=subplot(1,2,2),myplot(rand(1,10));
@@ -36,8 +40,7 @@ if(~exist('str','var') || isempty(str))
 end
 
 
-
-%%first figure
+%% first figure
 a=1:row*col;
 a=reshape(a,col,row)';
 [row_index,col_index]=find(a==subplotnum);

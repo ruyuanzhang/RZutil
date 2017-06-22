@@ -1,13 +1,16 @@
 function c0=mycolororder(theme,n)
-%two different types of color order when making figures
+% function c0=mycolororder(theme,n)
+%
+% set different colororder to produce figures
+%
 % Input
-%   theme: color,current accept,'color','gray','jet'
+%   theme: color,current accept,'color','gray','brightcolor','overcastsky','jet'
 %   n: levels we want, default is 7, we can create more by color
 %       interpolate
 % Output:
 %   c0: a n x 3 matrix rgb value
 %   
-% future work: Improve the gray color set, to improve the contrast.
+% future work: improve the gray color set, to improve the contrast.
 %
 if (~exist('theme','var')||isempty(theme))
     theme = 'color';

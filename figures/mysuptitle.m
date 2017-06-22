@@ -1,9 +1,12 @@
 function mysuptitle(str,titleypos)
-% add suptitle to multiple subplot figure
+% function mysuptitle(str,titleypos) 
+% 
+% add super title for multiple subplot.Comes from other's package, need to
+% double check.
+%
+%
 % mysuptitle(str,ypos)
-%
-%
-%
+% 
 if ~exist('str','var')||isempty(str)
     error('Please input the string to add');
 end
@@ -14,7 +17,6 @@ end
 
 % Amount of the figure window devoted to subplots
 plotregion = .92;
-
 
 % Fontsize for supertitle
 fs = get(gcf,'defaultaxesfontsize')+4;
