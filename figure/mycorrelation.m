@@ -27,8 +27,10 @@ function [cah, sstruct] = mycorrelation(data1,data2,varargin)
 %           first color (light blue color) for default colororder.
 %       degree: degree of poly fit, default:1, linear regression.
 %       se: {xse,yse}, xse and yse are standard error for x and y, the
-%           input format should be consisten with errorbar2.m. we use errorbar2 
-%           to plot errobar.
+%           input format should be consisten with rzerrorbar.m. we use rzerrorbar 
+%           to plot errobar. se can also be 2 x N where the first row
+%           has values for the lower bound and the second row has values
+%           for the upper bound.
 %           
 % Outputs:
 %       cah:        figure axes handle
@@ -37,7 +39,7 @@ function [cah, sstruct] = mycorrelation(data1,data2,varargin)
 % Note:
 %   1. Once we find nan value, just delete the pair of data in both data1
 %       and data2
-%   2. we use errorbar2 function to plot errobar.
+%   2. we use rzerrorbar function to plot errobar.
 %
 % Examples:
 % [h(1),s]=mycorrelation(corr(:,11),corr(:,3),'fighandle',h(1),'linearrange',[],'labels',{'Overall MOT performance at post-test','N-back learning gain%'},'corrinfo',{'r'});
@@ -110,15 +112,16 @@ data2 = data2(ind);
 
 %plot scatter plot
 hold(cah,'on');
-ph = myplot(cah,data1,data2,'o','Color',options.color,'MarkerSize',markersize,'tag','correlation dot');
+axes(cah);
+ph = myplot(data1,data2,[],'o','Color',options.color,'MarkerSize',markersize,'tag','correlation dot');
 % add errorbar
 f1=[];
 f2=[];
 if ~isempty(options.se{1})
-    f1 = errorbar2(data1,data2,options.se{1},0,'-','Color',options.color,'tag','errorbar_x');
+    f1 = rzerrorbar(flatten(data1),flatten(data2),options.se{1},0,'-','Color',options.color,'tag','errorbar_x');
 end
 if ~isempty(options.se{2})
-    f2 = errorbar2(data1,data2,options.se{2},1,'-','Color',options.color,'tag','errorbar_y');
+    f2 = rzerrorbar(flatten(data1),flatten(data2),options.se{2},1,'-','Color',options.color,'tag','errorbar_y');
 end
 
 if options.lineonly == 1    
@@ -136,9 +139,11 @@ a = axis(cah);
 
 %plot the correlation line
 if isempty(options.linearrange)
-    ph_line = myplot(cah,a(1:2), polyval(polyCoefs,a(1:2)),'-','LineWidth',2,'Color',get(ph,'Color'),'tag','correlation line');
+    axes(cah);
+    ph_line = myplot(a(1:2), polyval(polyCoefs,a(1:2)),[],'-','LineWidth',2,'Color',get(ph,'Color'),'tag','correlation line');
 else
-    ph_line = myplot(cah,options.linearrange(1:2), polyval(polyCoefs,options.linearrange(1:2)),'-','LineWidth',2,'Color',get(ph,'Color'),'tag','correlation line');
+    axes(cah);
+    ph_line = myplot(options.linearrange(1:2), polyval(polyCoefs,options.linearrange(1:2)),[],'-','LineWidth',2,'Color',get(ph,'Color'),'tag','correlation line');
 end
 
 

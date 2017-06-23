@@ -16,10 +16,10 @@ function color = rzcolor(iColor,theme,n)
 % Example:
 % figure;
 %   myplot(rand(1,10),rand(1,10),'o');hold on;
-%   myplot(rand(1,10),rand(1,10),'o','color',rzc(2));
+%   myplot(rand(1,10),rand(1,10),'o','color',rzcolor(2));
 % figure;
-%   myplot(rand(1,10),rand(1,10),'o','color',rzc(1,'gray'));hold on;
-%   myplot(rand(1,10),rand(1,10),'o','color',rzc(2,'gray'));
+%   myplot(rand(1,10),rand(1,10),'o','color',rzcolor(1,'gray'));hold on;
+%   myplot(rand(1,10),rand(1,10),'o','color',rzcolor(2,'gray'));
 %
 if (~exist('iColor','var')||isempty(iColor))
     theme = 'iColor';

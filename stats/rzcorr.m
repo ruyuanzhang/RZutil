@@ -1,7 +1,7 @@
 function [r,p] = rzcorr(x,y,varargin)
 % function [r,p] = rzcorr(x,y,varargin)
 %
-% a wrapper of the matlab corrcoef.m function
+% a wrapper of the matlab corrcoef.m function, we deliberately remove nan values
 %
 % Input:
 %   x,y: correlation can only be two equal size vectors
@@ -11,8 +11,7 @@ function [r,p] = rzcorr(x,y,varargin)
 %   p: p value for significance, default CI is 95%
 %
 % Note:
-%   1. deal with nan issue??
-%   2. empty responses
+%   1. empty responses
 if ~exist('x','var')||isempty(x)
     x =[];
 end
@@ -25,8 +24,6 @@ x = x(~isnan(x));
 y = y(~isnan(y));
 
 assert(isequal(size(x),size(y)),'x and y should be same size!');
-
-
 
 [R,P] = corrcoef(x,y,varargin{:});
 r = R(1,2);

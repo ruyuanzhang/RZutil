@@ -5,7 +5,7 @@ function h = cpsfigure(row,col,ratio)
 %
 % Input:
 %   row,col: row number and col number of subplots
-%   ration(optional):overal ratio of the figure after scaling by row and
+%   ratio(optional):overal ratio of the figure after scaling by row and
 %           col,default is 1.
 % Ouput:
 %   h: figure handle 
