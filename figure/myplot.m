@@ -39,7 +39,7 @@ if ~exist('se','var')||isempty(y)
     se=[];
 end
 if ~isempty(x)
-    assert(isequal(size(x),size(y)),'Please input same size of x,y!');
+    %assert(isequal(size(x),size(y)),'Please input same size of x,y!');
 end
 
 % do it 
