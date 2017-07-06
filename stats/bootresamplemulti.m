@@ -1,5 +1,5 @@
 function [sample,ind]=bootresamplemulti(x,nboot)
-% function sample=bootresample(x)
+% function [sample,ind]=bootresamplemulti(x,nboot)
 % resample an vector for bootstrap. We assume input is a long vertical
 % vector,then we generate nboot columes as the result. remember. this
 % is sample with replacement.
@@ -8,8 +8,8 @@ function [sample,ind]=bootresamplemulti(x,nboot)
 %   x: a matrix,can be a cell
 %   nboot: how many samples we want,default is 1;
 % Output:
-%   sample:a length(x)xnboot matrix, each columen is a sample
-%   ind: length(x)xnboot matrix, each columen is a sample. value is the
+%   sample:a length(x) X nboot matrix, each column is a sample
+%   ind: length(x) X nboot matrix, each columen is a sample. value is the
 %       index in original input
 % Note: 
 %   1. it assumes sample with replacement

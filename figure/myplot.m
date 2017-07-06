@@ -3,13 +3,18 @@ function lh = myplot(x,y,se,varargin)
 %
 % plot function by Ruyuan Zhang, just a wrapper of plot.m.
 %% Input:
-%   x,y: input x,y data, x,y are vectors or matrix. If they are matrix, then
-%       each column is a line. remember, the size of x, y should be compatible
+%   x,y: input x,y data, x,y are ROW vectors or matrix. If they are both matrix, then
+%       each ROW is a line.
 %   se: sebar number, se is a vector or a matrix with same size as
 %       x,y. In this case, se is a absolute value, the lower and upper boundary
 %       of data should y-se and y+se.
-%       Or, it can be with size as [size(x) 2]. The extra dimension
-%       specifiy the lower and upper se, which correpond to errorbar2.m 
+%       or, 
+%       it can be with size as [size(x) 2]. The extra dimension
+%       specifiy the lower and upper se, which correpond to errorbar2.m
+%       or,
+%       se can be a two element cell {horzse,vertse} indicate horizontal se and
+%       vertical se. Each element should be defined as non cell case
+
 %   varargin: other varargins for plot.m
 %   
 % Output:
@@ -26,6 +31,8 @@ function lh = myplot(x,y,se,varargin)
 %   figure;myplot(rand(1,10),rand(1,10),'-b','Tag','group1');
 %   
 % History:
+%   20170706 RZ implement the vertical and horizontal errorbar,delete the tag
+%       function, which seems hard
 %   2017/05/03 RZ add sebar function and fix the tag
 %   2016/11/11 RZ added tag input option
 
@@ -33,63 +40,84 @@ if ~exist('x','var')||isempty(x)
     x=[];
 end
 if ~exist('y','var')||isempty(y)
-    y=[];
+    error('You must input y!');
 end
 if ~exist('se','var')||isempty(y)
     se=[];
 end
-if ~isempty(x)
-    %assert(isequal(size(x),size(y)),'Please input same size of x,y!');
+
+%% deal with the input
+if isempty(x)
+    x = 1:size(y,2); % line length is size(y,2)
 end
 
-% do it 
-if ~isempty(x)
-    lh = plot(x,y,varargin{:}); hold on;
-else
-    lh = plot(y,varargin{:}); hold on;
+% figure out line width
+% 1D, row
+if isrow(x) || iscolumn(x)
+    x = flatten(x); % flatten x if it is a column vector, to make sure x are always row vector;
+    assert(length(x)==size(y,2),'size of x,y seems incompatible,we plot row of y');
+    x = repmat(x,size(y,1),1);% we expand x to be same size with y;
+else % in this case both x,y are matrix
+    assert(all(size(x)==size(y)),'both x,y are matrix, their size should be same'); 
 end
-
+% do it
+lh = plot(x',y',varargin{:}); hold on;% we transpose x,y in this case, weird plot function setting in matlab ..
 % edit it a little big
 set(gca, 'box','off');
 set(lh,'LineWidth',2);
 
-% add tag
-% it would be nice if plot multiple lines or groups of dots
-if any(cellfun(@(x) strcmp(x,'Tag'), varargin, 'UniformOutput', 1))
-    ind = find(cellfun(@(x) strcmp(x,'Tag'), varargin, 'UniformOutput', 1));
-    tag = varargin{ind+1};
-    if ~iscell(tag)
-        tag = cell(tag);
-    end
-    % give tag for all lines
-    for iLine = 1:length(lh) % loop how many lines we have
-        set(lh(iLine),'Tag',tag{iLine});
-    end
-end
+% % %% add tag
+% % % it would be nice if plot multiple lines or groups of dots
+% % if any(cellfun(@(x) strcmp(x,'Tag'), varargin, 'UniformOutput', 1))
+% %     ind = find(cellfun(@(x) strcmp(x,'Tag'), varargin, 'UniformOutput', 1));
+% %     tag = varargin{ind+1};
+% %     if ~iscell(tag)
+% %         tag = {tag};
+% %     end
+% %     assert(numel(tag)==numel(lh),'Input correct number of Tag');
+% %     % give tag for all lines
+% %     for iLine = 1:length(lh) % loop how many lines we have
+% %         set(lh(iLine),'Tag',tag{iLine});
+% %     end
+% % end
 
 
-% plot sebar
+%% plot errorbar
 %eh = zeros(size(se));
-if ~isempty(se) 
-    % first massage se
-    
-    % in this case se is a absolute difference, refer the 1st case of definition of
-    % se in function head
-    if length(size(se)) < 3
-        setmp(:,:,1) = y - se; % upper bound
-        setmp(:,:,2) = y + se;
-        %setmp is a
-        se = permute(setmp,[3 2 1]); %se is a 2 x line x data matrix
-    else % in this case, se is a data x line x 2 matrix
-        se = permute(se,[3 2 1]);% 2 x line x data matrix
+if ~isempty(se)
+    if iscell(se) % plot both horizontal and vertical bar
+        sev = se{1};
+        seh = se{2};
+    else
+        sev = se;
+        seh = [];
     end
-    
-    for iLine = 1:length(lh) % loop how many lines we have
-    %eh(iLine,:) = sebar2(x(:,iLine),y(:,iLine),squeeze(se(:,iLine,:))',1,'-','Color',c,iLine);
-        if isempty(x)
-            rzerrorbar(1:size(y,1),flatten(y(:,iLine)),squeeze(se(:,iLine,:)),1,'-','Color',get(lh(iLine),'color')); hold on;              
-        else
-            rzerrorbar(flatten(x(:,iLine)),flatten(y(:,iLine)),squeeze(se(:,iLine,:)),1,'-','Color',get(lh(iLine),'color')); hold on; 
+    % deal with vertical errorbar
+    if length(size(sev)) < 3
+        setmp(:,:,1) = sev; % upper bound
+        setmp(:,:,2) = sev;
+        %setmp is a
+        sev = permute(setmp,[3 2 1]); %se is a 2 x line x data matrix
+    else % in this case, se is a data x line x 2 matrix
+        sev = permute(sev,[3 2 1]);% 2 x line x data matrix
+    end
+    sev = reshape(sev,[2 size(y,1) size(y,2)]);% to avoid one line case
+    for iLine = 1:length(lh) % loop how many lines we have        
+        rzerrorbar(x(iLine,:),y(iLine,:),squeeze(sev(:,iLine,:)),1,'-','Color',get(lh(iLine),'color')); hold on;
+    end
+    if ~isempty(seh)
+        % deal with horizontal errorbar
+        if length(size(seh)) < 3
+            setmp(:,:,1) = seh; % upper bound
+            setmp(:,:,2) = seh;
+            %setmp is a
+            seh = permute(setmp,[3 2 1]); %se is a 2 x line x data matrix
+        else % in this case, se is a data x line x 2 matrix
+            seh = permute(sev,[3 2 1]);% 2 x line x data matrix
+        end
+        seh = reshape(seh,[2 size(y,1) size(y,2)]);% to avoid one line case
+        for iLine = 1:length(lh) % loop how many lines we have
+            rzerrorbar(x(iLine,:),y(iLine,:),squeeze(seh(:,iLine,:)),0,'-','Color',get(lh(iLine),'color')); hold on;
         end
     end
 end

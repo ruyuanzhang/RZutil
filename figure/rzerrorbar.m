@@ -5,7 +5,7 @@ function f = rzerrorbar(x,y,er,direction,varargin)
 %
 % <x>,<y>,<er> are ROW vectors of the same length
 %   <er> can also be 2 x N where the first row
-%   has values for the lower bound and the second row has values
+%   has offset values for the lower bound and the second row has offset values
 %   for the upper bound.
 % <direction> is
 %   0 or 'h' or 'x' means error on x
@@ -16,8 +16,8 @@ function f = rzerrorbar(x,y,er,direction,varargin)
 % a vector of handles.
 %
 % example:
-% figure; errorbar2(randn(1,10),randn(1,10),randn(1,10)/4,1,'r-');
-% figure; errorbar2(randn(1,10),randn(1,10),[randn(1,10);randn(1,10)]/4,1,'r-');
+% figure; rzerrorbar(randn(1,10),randn(1,10),randn(1,10)/4,1,'r-');
+% figure; rzerrorbar(randn(1,10),randn(1,10),[randn(1,10);randn(1,10)]/4,1,'r-');
 %
 % Note: 
 %   1. what about the cases of NaNs? we report error if input have nan values

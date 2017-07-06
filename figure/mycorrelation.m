@@ -18,11 +18,11 @@ function [cah, sstruct] = mycorrelation(data1,data2,varargin)
 %                   - 'SSE'    sum of squared error
 %                   - 'n'      number of data points used
 %                           %if not specified or empty, default is: {'r';'p'}
-%       fighandle    :  could be figure, axes handles
+%       fighandle  :  could be figure, axes handles
 %       drawconf: yes,draw confident interval patch, default: yes,
 %       confinterval: a scalar between 0~1, default:0.68
 %       labels   : lables for data 1 and data 2, default {'data1','data2'};
-%       linearrange: the range of the linear line; default: axex limits;
+%       linerange: the range of the linear line; default: axex limits;
 %       color: color for dot and line,default:[0    0.4470    0.7410],the
 %           first color (light blue color) for default colororder.
 %       degree: degree of poly fit, default:1, linear regression.
@@ -42,7 +42,7 @@ function [cah, sstruct] = mycorrelation(data1,data2,varargin)
 %   2. we use rzerrorbar function to plot errobar.
 %
 % Examples:
-% [h(1),s]=mycorrelation(corr(:,11),corr(:,3),'fighandle',h(1),'linearrange',[],'labels',{'Overall MOT performance at post-test','N-back learning gain%'},'corrinfo',{'r'});
+% [h(1),s]=mycorrelation(corr(:,11),corr(:,3),[],'fighandle',h(1),'linerange',[],'labels',{'Overall MOT performance at post-test','N-back learning gain%'},'corrinfo',{'r'});
 %
 % Future work:
 %   1. dot,line,surface handle delivered to structure, then every handle is
@@ -66,7 +66,7 @@ options = struct(...
         'fighandle',[],...
         'drawconf','yes',...
         'labels',{{'',''}},... % note cell input should be double quote
-        'linearrange',[],...
+        'linerange',[],...
         'lineonly',0,...
         'confinterval',0.68,...
         'color',[0 0.4470 0.7410],...
@@ -138,21 +138,23 @@ SSE = sqrt(sum((polyval(polyCoefs,data1)-data2).^2)/(N-2));
 a = axis(cah);
 
 %plot the correlation line
-if isempty(options.linearrange)
+if isempty(options.linerange)
     axes(cah);
     ph_line = myplot(a(1:2), polyval(polyCoefs,a(1:2)),[],'-','LineWidth',2,'Color',get(ph,'Color'),'tag','correlation line');
 else
     axes(cah);
-    ph_line = myplot(options.linearrange(1:2), polyval(polyCoefs,options.linearrange(1:2)),[],'-','LineWidth',2,'Color',get(ph,'Color'),'tag','correlation line');
+    ph_line = myplot(options.linerange(1:2), polyval(polyCoefs,options.linerange(1:2)),[],'-','LineWidth',2,'Color',get(ph,'Color'),'tag','correlation line');
 end
 
 
-if  isequal(options.drawconf,'yes')% Add 95% CI lines
-	xfit = a(1):(a(2)-a(1))/100:a(2);
+if  isequal(options.drawconf,'yes')% Add 95% CI linesw
+    xfit = ph_line.XData(1):(ph_line.XData(2)-ph_line.XData(1))/100:ph_line.XData(2);
 	[yfit, delta] = polyconf(polyCoefs,xfit,S,'alpha',1-options.confinterval);
 	ar = patch([xfit fliplr(xfit)],[yfit+delta fliplr(yfit-delta)],get(ph,'Color'));
     set(ar,'Facecolor',get(ph,'Color'),'LineStyle','none','FaceAlpha',0.1); 
 end
+
+% re adjust 
 
 corrtext = {};  
 for i=1:length(options.corrinfo)
@@ -168,7 +170,7 @@ for i=1:length(options.corrinfo)
 	end
 end
 a = axis(cah);
-texthandle = text(a(1)+0.01*(a(2)-a(1)),a(4),corrtext,'parent',cah,'FontSize',15,'FontName','Arial','Color',get(ph,'Color'));
+texthandle = text(a(1)+0.01*(a(2)-a(1)),a(4),corrtext,'Parent',cah,'FontSize',15,'FontName','Arial','Color',get(ph,'Color'));
 %set(texthandle,'FontName','Arial');
 %set(texthandle,'FontSize',13);
 xlabel(cah,options.labels{1}); ylabel(cah,options.labels{2});
@@ -185,5 +187,6 @@ if nargout>1
         'dothandle',ph,...
         'linehandle',ph_line,...
         'surfacehandle',ar,...
-        'errobarhandle',{f1,f2});
+        'errobarhandle',{f1,f2},...
+        'testhandle',texthandle);
 end
