@@ -1,39 +1,39 @@
-function figrmwhitespace(item,row,col,space)
-% fig=figrmwhitespace(fig,row,col,space)
+function figrmwhitespace(axhandle,row,col,space)
+% figrmwhitespace(axhandle,row,col,space)
 %
 % remove some redundent white space when using multiple subplot
 %
 % -------------------------------------------------------------------------
 %   Input:
+%       axhandle: an array including all handles in a figure. The index in this
+%       array should indicate correct order of all subplots. Remember to remove
+%           some redundent handles, e.g., suptitle,legend            
 %       row,col: number of rows and columns of this multiple plot figures
 %    Optional:
-%       item:axes handels, could be single or multiple axes,for example
+%       axhandle:axes handels, could be single or multiple axes,for example
 %       h(4);
 %       space:a 1 by 4 vector, range from 0~1, specify move distance [left bottom width
 %               heigh], for make all subplots closer, use negative
 %               value, otherwise,use positive value
 %--------------------------------------------------------------------------
-%   Output:
-%        fig:whole figure handle;
-%--------------------------------------------------------------------------
 % Example:
 % x=1:100;y=randn(1,100);
 % fig = figure;
 % for i=1:6
-%     subplot(3,2,i);
+%     ax(i) = subplot(3,2,i);
 %     myplot(x,y);hold on;
 %     title(sprintf('figure%d',i));
 % end
 % fig2 = figure;
 % for i=1:6
-%     subplot(3,2,i);
+%     bx(i) = subplot(3,2,i);
 %     myplot(x,y);hold on;
 %     title(sprintf('figure%d',i));
 % end
-% fig2=figrmwhitespace(fig2,3,2);
+% fig2=figrmwhitespace(bx,3,2);
 
-if (any(~ishandle(item)) || (isempty(item)))
-    item=gca;
+if (any(~ishandle(axhandle)) || (isempty(axhandle)))
+    axhandle=gca;
 end
 
 if(~exist('row','var') || isempty(row))
@@ -50,23 +50,23 @@ end
 
 margin=[0 0 0 0];
 %test largest TightInset Margin
-for i= 1:numel(item)
+for i= 1:numel(axhandle)
 
-    %if isa(item(i),'matlab.graphics.axis.Axes') && 
-    if ~strcmp(get(item(i),'Tag'),'suptitle')
-        margin=[margin;get(item(i),'TightInset')];
+    %if isa(axhandle(i),'matlab.graphics.axis.Axes') && 
+    if ~strcmp(get(axhandle(i),'Tag'),'suptitle')
+        margin=[margin;get(axhandle(i),'TightInset')];
 
     end%only count axis object 
 end
 
 margin=max(margin);
 
-H=get(item(i),'Parent');
+H=get(axhandle(i),'Parent');
 k=0;
-for i= 1:numel(item)
+for i= 1:numel(axhandle)
     
-    %if ~(isa(item(i),'matlab.graphics.axis.Axes')) && 
-    if ~strcmp(get(item(i),'Tag'),'suptitle') %only count axis object
+    %if ~(isa(axhandle(i),'matlab.graphics.axis.Axes')) && 
+    if ~strcmp(get(axhandle(i),'Tag'),'suptitle') %only count axis object
         k=k+1;
         a=1:row*col;
         a=reshape(a,col,row)';
@@ -82,7 +82,7 @@ for i= 1:numel(item)
         Position(3)=OuterPosition(3)-margin(1)-margin(3)-space(3);
         Position(4)=OuterPosition(4)-margin(2)-margin(4)-space(4);
 
-        set(item(i),'OuterPosition',OuterPosition,'Position',Position); % It's important to set OuterPosition and Position at the same time
+        set(axhandle(i),'OuterPosition',OuterPosition,'Position',Position); % It's important to set OuterPosition and Position at the same time
         
     end
 end

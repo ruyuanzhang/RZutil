@@ -14,7 +14,7 @@ function lh = myplot(x,y,se,varargin)
 %       or,
 %       se can be a two element cell {horzse,vertse} indicate horizontal se and
 %       vertical se. Each element should be defined as non cell case
-
+%
 %   varargin: other varargins for plot.m
 %   
 % Output:
@@ -25,10 +25,7 @@ function lh = myplot(x,y,se,varargin)
 %   1. We use sebar2.m to plot sebar
 %
 % Example:
-%   figure;myplot(rand(1,10));
-%   figure;myplot(rand(1,10),rand(1,10));
-%   figure;myplot(rand(1,10),rand(1,10),'-b');
-%   figure;myplot(rand(1,10),rand(1,10),'-b','Tag','group1');
+% figure;myplot([],rand())
 %   
 % History:
 %   20170706 RZ implement the vertical and horizontal errorbar,delete the tag
@@ -86,8 +83,8 @@ set(lh,'LineWidth',2);
 %eh = zeros(size(se));
 if ~isempty(se)
     if iscell(se) % plot both horizontal and vertical bar
-        sev = se{1};
-        seh = se{2};
+        seh = se{1};
+        sev = se{2};
     else
         sev = se;
         seh = [];

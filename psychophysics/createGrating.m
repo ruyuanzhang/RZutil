@@ -72,8 +72,8 @@ end
 %% create the spatial mask
 [x,y]=meshgrid(-radius+1:radius,-radius+1:radius);
 bps = (radius)*2;circle=((radius)^2-(x.^2+y.^2));
-for i=1:bps;
-    for j =1:bps;
+for i=1:bps
+    for j =1:bps
         if circle(i,j) < 0; circle(i,j) = 0;
         else
             circle(i,j) = 1;
@@ -101,6 +101,7 @@ end
 %% generating grating images
 f=(options.sf*options.scaleFactor/60)*2*pi;
 a=cosd(options.orientation)*f; b=sind(options.orientation)*f;
+options.amplitude = options.amplitude*options.contrast;
 gratingImg = zeros(bps,bps,options.mvLength);
 
 for i = 1:options.mvLength

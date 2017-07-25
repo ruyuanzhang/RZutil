@@ -6,9 +6,9 @@ function er = booterrorbar(x,metric,errorFormat,prcntage,nBoot)
 % Input:
 %   x: input vector, can be ROW or COLUMN, we flatten it to row
 %   optional:
-%       metric: a string, specify 'mean'(default),'media','nanmean','nanmedian';
+%       metric: a string, specify 'mean'(default),'median','nanmean','nanmedian';
 %       errorFormat: a string:
-%           'single': return a single number,half of the range between
+%           'single': (default) return a single number,half of the range between
 %               low/up range.
 %           'bound': return two number, upper and lower bound
 %       prcntage: e.g. 95, 95% confidence interval, default:68
