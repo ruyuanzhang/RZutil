@@ -1,4 +1,4 @@
-function lh = myplot(x,y,se,varargin)
+function [lh, eh] = myplot(x,y,se,varargin)
 % function H = myplot(x,y,se,varargin)
 %
 % plot function by Ruyuan Zhang, just a wrapper of plot.m.

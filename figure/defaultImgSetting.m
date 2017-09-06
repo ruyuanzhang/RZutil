@@ -36,15 +36,16 @@ set(rootind,'defaultAxesBox','off');
 set(rootind,'defaultAxesTickDirMode','manual');
 set(rootind,'defaultAxesTickDir','out');
 
-
 %Default text seting
 set(rootind,'defaultTextFontSize',15);
 set(rootind,'defaultTextFontName','Arial');
 %Default line setting
 set(rootind,'defaultLineMarkerSize',8);
 set(rootind,'defaultLineLineWidth',1.5);
+set(rootind,'defaultLineMarkerFaceColor',[1 1 1]);
 %Default figure setting
 set(rootind,'DefaultFigurePaperPositionMode','auto');
+
 
 
 %% below are specific to groot, somehow it's wrong to use 0 on linux

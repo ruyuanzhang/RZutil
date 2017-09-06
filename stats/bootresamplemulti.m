@@ -26,7 +26,7 @@ if ~exist('nboot','var')||isempty(nboot)
     nboot = 1000; %default,we resample once
 end
 % check stimulus
-vflatten(x); % wright input into a vertical vector
+x = vflatten(x); % write input into a vertical vector
 
 ind = ceil(rand(numel(x),nboot)*numel(x));
 sample = x(ind); % now each column is a bootstrap sample, we have nboot columns. 

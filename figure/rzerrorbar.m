@@ -1,7 +1,7 @@
 function f = rzerrorbar(x,y,er,direction,varargin)
 % function f = errorbar2(x,y,er,direction,varargin)
 %
-% RZ's errorbar function, based on errorbar2.m from KK. 
+% RZ's errorbar function, based on errorbar2.m from KK 
 %
 % <x>,<y>,<er> are ROW vectors of the same length
 %   <er> can also be 2 x N where the first row
@@ -12,10 +12,13 @@ function f = rzerrorbar(x,y,er,direction,varargin)
 %   1 or 'v' or 'y' means error on y
 % <varargin> are additional arguments to plot.m (e.g. 'r-')
 %
+% Output
+%   errorbar handle
+%   
 % draws error lines on the current figure, returning
 % a vector of handles.
 %
-% example:
+% Example:
 % figure; rzerrorbar(randn(1,10),randn(1,10),randn(1,10)/4,1,'r-');
 % figure; rzerrorbar(randn(1,10),randn(1,10),[randn(1,10);randn(1,10)]/4,1,'r-');
 %

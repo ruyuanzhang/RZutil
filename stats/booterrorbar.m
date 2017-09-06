@@ -1,5 +1,5 @@
 function er = booterrorbar(x,metric,errorFormat,prcntage,nBoot)
-% function booterrorbar(x,metric,errorFormat,nBoot)
+% function booterrorbar(x,metric,errorFormat,prcntage,nBoot)
 %
 % Estimate the errorbar given a vector and a metric
 %
@@ -51,7 +51,7 @@ end
 [samples,~] = bootresamplemulti(x,nBoot);
 switch metric
     case 'mean'
-        tmp = mean(samples);
+        tmp = mean(samples); % take the mean in the first dimension
         tmp2 = mean(x);
     case 'median'
         tmp = median(samples);
@@ -64,11 +64,11 @@ switch metric
         tmp2 = nanmedian(x);
 end
 
-prcntage = (100 - prcntage)/2*[-1 1]+50;% compute target prcntage
+prcntage = [(100 - prcntage)/2 100-(100 - prcntage)/2 ];% compute target prcntage
 % get bound
 er = prctile(tmp,prcntage);
 if strcmp(errorFormat,'single')
-    er = diff(er);
+    er = diff(er)/2;
 else strcmp(errorFormat,'bound')
     er = [tmp2-er(1),er(2)-tmp2];
 end
