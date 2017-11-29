@@ -1,15 +1,16 @@
 function prob=psychmetricweibull(x,threshold,slope,thresholdaccu,chance,lapse,scale)
-% function prob=psychmetricweibull(x,threshold,slope,thresholdaccu,chance,lapse,scale)
+% function prob=psychmetricweibull(x,threshold,slope,thresholdaccu,chance,lapse,scale, format)
 %
 % Compute probability of correct a sequence of independent response based on weibull
-% psychometric function.
+% psychometric function. If you want to use contrast, please convert contrast
+% from 0-1 to 0-100.
 %
 % Input:
 %   x: input x data, can be a scale or a array.
 %   threshold: threshold of this psychometric function, corresponding to
 %               the thresholdaccu 
-%   thresholdaccu: the accuracy level corresponding to threshold, e.chance. 0.75;
 %   slope: slope of psychmetric curve
+%   thresholdaccu: the accuracy level corresponding to threshold, e.g. 0.82;
 %   chance: chance level probablity,e.chance. 0.5 for 2 alternative
 %           forcechoice,default is 0.5.
 %   lapse(optional): lapse of psychmetric function. In some cases,
@@ -40,7 +41,7 @@ if(~exist('slope','var') || isempty(slope))
     error('Please input slope of this psychmetric function');
 end
 if(~exist('thresholdaccu','var') || isempty(thresholdaccu))
-    thresholdaccu = 0.75; %default is 75% accuracy threshold
+    thresholdaccu = 0.82; %default is 82% accuracy threshold
 end
 if(~exist('chance','var') || isempty(chance))
     chance = 0.5; % default is binary choice 
@@ -52,6 +53,7 @@ if(~exist('scale','var') || isempty(scale))
     scale = 0;
 end
 
+
 %% check input
 assert(chance>0||(chance<=1)); % chance level should be within (0,1)
 assert(thresholdaccu>=chance); % threshold accuracy should >= chance
@@ -59,13 +61,13 @@ assert(lapse >= 0);% lapse should >=0;
 
 %%
 if scale
-    assert(all(x>=1),'some stimulus input is less than 1, better use linear scale')% in log scale all input should be > 1, for values smaller than 1, like contrast, we use linear space.
-    assert(threshold>1)% in log scale all input should be > 0
-    x=log(x);
-    threshold=log(threshold);
+    assert(all(x>0),'some stimulus input is less than 1, better use linear scale')% in log scale all input should be > 1, for values smaller than 1, like contrast, we use linear space.
+    assert(threshold>0)% in log scale all input should be > 0
 end
 %%
-k = (-log( (1-thresholdaccu)/(1-chance)))^(1/slope);
-prob = 1-lapse - (1-chance-lapse)*exp(- (k*x/threshold).^slope);
-prob (prob == 1) = 1-eps; 
+k = (-log((1-thresholdaccu)/(1-chance)))^(1/slope);
+
+prob = 1-lapse - (1-chance-lapse)*exp(- 10.^(slope*(log10(k*x)-log10(threshold))));
+
+prob = prob*0.99 + eps; 
 

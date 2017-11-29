@@ -61,14 +61,14 @@ end
 %%
 [x,y]=meshgrid(-radius:radius,-radius:radius);
 bps = (radius)*2+1;circle=((radius)^2-(x.^2+y.^2));
-for i=1:bps;
-    for j =1:bps;
+for i=1:bps
+    for j =1:bps
         if circle(i,j) < 0; circle(i,j) = 0;
         else
             circle(i,j) = 1;
-        end;
-    end;
-end;
+        end
+    end
+end
 if isequal(options.maskType,'gaussian')
     circle = (exp(-(((x)/(sqrt(2)*Gaussian_stdev/2)).^2)-((y/(sqrt(2)*Gaussian_stdev/2)).^2)).*circle);
 elseif isequal(options.maskType,'cosine')
