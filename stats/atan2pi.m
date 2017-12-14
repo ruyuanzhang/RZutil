@@ -6,17 +6,17 @@ if nargin==1 %just in case the user only gives the value of y myatan(y)
 end
 v=nan;
 
-if x>0&y>=0
+if x>0 && y>=0
     v=atan2(y,x);
 end
-if x>0&y<0
+if x>0&&y<0
     v=2*pi+atan2(y,x);
 end
 
-if y>=0 & x<0
+if y>=0 && x<0
     v=pi-atan2(y,x);
 end
-if y<0 & x<0
+if y<0 && x<0
     v=pi+atan2(y,x);
 end
 
