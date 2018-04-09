@@ -68,7 +68,7 @@ if size(images0,4)==1 %3D
     % write the movie
     rng = prctile(flatten(double(images0(:,:,1))),[.5 99.5]);
     for p=1:size(images0,3)
-        writeMovie(mov,unit8(255*normalizerange(images0(:,:,p),0,1,rng(1),rng(2))));
+        writeMovie(mov,uint8(255*normalizerange(images0(:,:,p),0,1,rng(1),rng(2))));
     end
 else %4D
     rng = prctile(flatten(double(images0(:,:,:,1))),[.5 99.5]);
