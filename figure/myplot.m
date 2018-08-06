@@ -1,5 +1,5 @@
 function [lh, eh] = myplot(x,y,se,varargin)
-% function H = myplot(x,y,se,varargin)
+% function [lh, eh] = myplot(x,y,se,varargin)
 %
 % plot function by Ruyuan Zhang, just a wrapper of plot.m.
 %% Input:
@@ -100,7 +100,7 @@ if ~isempty(se)
     end
     sev = reshape(sev,[2 size(y,1) size(y,2)]);% to avoid one line case
     for iLine = 1:length(lh) % loop how many lines we have        
-        rzerrorbar(x(iLine,:),y(iLine,:),squeeze(sev(:,iLine,:)),1,'-','Color',get(lh(iLine),'color')); hold on;
+        eh = rzerrorbar(x(iLine,:),y(iLine,:),squeeze(sev(:,iLine,:)),1,'-','Color',get(lh(iLine),'color')); hold on;
     end
     if ~isempty(seh)
         % deal with horizontal errorbar
@@ -114,8 +114,10 @@ if ~isempty(se)
         end
         seh = reshape(seh,[2 size(y,1) size(y,2)]);% to avoid one line case
         for iLine = 1:length(lh) % loop how many lines we have
-            rzerrorbar(x(iLine,:),y(iLine,:),squeeze(seh(:,iLine,:)),0,'-','Color',get(lh(iLine),'color')); hold on;
+            eh = rzerrorbar(x(iLine,:),y(iLine,:),squeeze(seh(:,iLine,:)),0,'-','Color',get(lh(iLine),'color')); hold on;
         end
     end
+else
+    eh = [];
 end
 

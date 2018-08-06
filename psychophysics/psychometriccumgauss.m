@@ -1,5 +1,5 @@
-function prob = psychmetriccumgauss(x,threshold,slope,chance,lapse,scale)
-% function prob = psychmetriccumgauss(x,threshold,slope,chance,lapse,scale)
+function prob = psychometriccumgauss(x,threshold,slope,chance,lapse,scale)
+% function prob = psychometriccumgauss(x,threshold,slope,chance,lapse,scale)
 % 
 % Compute probability of a sequence of independent response based on
 % cummulative gaussain function
@@ -52,15 +52,14 @@ end
 assert(chance>0||(chance<=1)); % chance level should be within (0,1)
 assert(lapse >= 0);% lapse should >=0;
 
-
 %%
 if scale
-    assert(all(x>=1),'variable value less than 1, better use linear scale')% in log scale all input should be > 0
-    assert(threshold>=1)% in log scale all input should be > 0
+    assert(all(x>0),'variable value less than 0, better use linear scale')% in log scale all input should be > 0
+    assert(threshold>0)% in log scale all input should be > 0
     x=log(x);
     threshold=log(threshold);
 end
 %% do it
 P_cdf = normcdf(x,threshold,slope);% normcdf( durations, mu, sigma );
 prob = chance + (1-chance-lapse)*P_cdf;
-prob (prob == 1) = 1-eps;
+prob = 0.99*prob + eps;

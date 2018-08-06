@@ -1,4 +1,4 @@
-function prob=psychmetricweibull(x,threshold,slope,thresholdaccu,chance,lapse,scale)
+function prob=psychometricweibull(x,threshold,slope,thresholdaccu,chance,lapse,scale)
 % function prob=psychmetricweibull(x,threshold,slope,thresholdaccu,chance,lapse,scale, format)
 %
 % Compute probability of correct a sequence of independent response based on weibull
@@ -55,19 +55,25 @@ end
 
 
 %% check input
-assert(chance>0||(chance<=1)); % chance level should be within (0,1)
+assert(chance>=0&(chance<=1)); % chance level should be within (0,1)
 assert(thresholdaccu>=chance); % threshold accuracy should >= chance
 assert(lapse >= 0);% lapse should >=0;
 
-%%
+assert(all(x>0),'weibull function requires that all stimulus intensities >0')% in log scale all input should be > 1, for values smaller than 1, like contrast, we use linear space.
+
+% transform to log space
 if scale
-    assert(all(x>0),'some stimulus input is less than 1, better use linear scale')% in log scale all input should be > 1, for values smaller than 1, like contrast, we use linear space.
-    assert(threshold>0)% in log scale all input should be > 0
+    x = log(x);
+    threshold = log(threshold);
 end
+
 %%
 k = (-log((1-thresholdaccu)/(1-chance)))^(1/slope);
+prob = 1-lapse - (1-chance-lapse)*exp(-(k*x/threshold.^slope)); % hack here to avoid the complex number of power operation
 
-prob = 1-lapse - (1-chance-lapse)*exp(- 10.^(slope*(log10(k*x)-log10(threshold))));
+% avoid small negative number
+prob(prob<0) = 0;
+prob(prob>1) = 1;
 
 prob = prob*0.99 + eps; 
 
