@@ -1,5 +1,5 @@
 function outputse = se(x,dim)
-% function outputse = se(x)
+% function outputse = se(x,dim)
 %
 % compute standard error of a samples in a vector, we rely on std.m function in
 % matlab, 

@@ -61,6 +61,17 @@ switch monitorname
         
     case 'uminn3tbprojector'
     
+    case 'cmrrpsphlab'
+        mp.monitorName = 'cmrrpsphlab';
+        mp.size = [52, 32.5];  % width, height cm
+        mp.resolution = [1920, 1200]; % width height pixels
+        mp.refreshRate = 60; % hz
+        mp.viewDist = 70;
+        mp.coil = {};
+        mp.pixPerDeg = (mp.resolution(1)/2)./ atand(mp.size(1)/2./mp.viewDist); %pix/deg
+        mp.pixPerArcmin = mp.pixPerDeg/60; %pix/arcmin
+        mp.gamma = 1;
+    
     case 'uminnmacpro'
         mp.monitorName = 'uminmacpro';
         mp.size = [36, 29];  % width, height cm
@@ -81,6 +92,15 @@ switch monitorname
         mp.coil = {};
         mp.pixPerDeg = (mp.resolution(1)/2)./ atand(mp.size(1)/2./mp.viewDist); %pix/deg
         mp.pixPerArcmin = mp.pixPerDeg/60; %pix/arcmin
+        mp.gamma = 1;
+    case 'uminnintracranialpatient' 
+        mp.monitorName = 'uminnintracranialpatient';
+        mp.size = [53.85, 35.56];  % cm
+        mp.resolution = [1920, 1080]; % pixels
+        mp.refreshRate = 60; % hz
+        mp.viewDist = 60.96; % cm, 2ft
+        mp.pixperdeg = (mp.resolution(1)/2)./ atand(mp.size(1)/2./mp.viewDist); %pix/deg
+        mp.pixperarcmin = mp.pixperdeg/60; %pix/arcmin
         mp.gamma = 1;
         
     otherwise

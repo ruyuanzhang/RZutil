@@ -10,7 +10,7 @@ function [lh, eh] = myplot(x,y,se,varargin)
 %       of data should y-se and y+se.
 %       or, 
 %       it can be with size as [size(x) 2]. The extra dimension
-%       specifiy the lower and upper se, which correpond to errorbar2.m
+%       specifiy the upper and lower se, which correpond to errorbar2.m
 %       or,
 %       se can be a two element cell {horzse,vertse} indicate horizontal se and
 %       vertical se. Each element should be defined as non cell case
@@ -28,6 +28,7 @@ function [lh, eh] = myplot(x,y,se,varargin)
 % figure;myplot([],rand())
 %   
 % History:
+%   20180816 RZ fixed the return bug of the eh
 %   20170706 RZ implement the vertical and horizontal errorbar,delete the tag
 %       function, which seems hard
 %   2017/05/03 RZ add sebar function and fix the tag
@@ -39,7 +40,7 @@ end
 if ~exist('y','var')||isempty(y)
     error('You must input y!');
 end
-if ~exist('se','var')||isempty(y)
+if ~exist('se','var')||isempty(se)
     se=[];
 end
 
@@ -89,18 +90,19 @@ if ~isempty(se)
         sev = se;
         seh = [];
     end
+    % the input sev is lines x data point x 2
     % deal with vertical errorbar
     if length(size(sev)) < 3
         setmp(:,:,1) = sev; % upper bound
         setmp(:,:,2) = sev;
-        %setmp is a
-        sev = permute(setmp,[3 2 1]); %se is a 2 x line x data matrix
+        sev = permute(setmp,[3 1 2]); %se is a 2 x line x data matrix
     else % in this case, se is a data x line x 2 matrix
-        sev = permute(sev,[3 2 1]);% 2 x line x data matrix
+        sev = permute(sev,[3 1 2]);% 2 x line x data matrix
     end
     sev = reshape(sev,[2 size(y,1) size(y,2)]);% to avoid one line case
+    eh = cell(1,size(y,1));
     for iLine = 1:length(lh) % loop how many lines we have        
-        eh = rzerrorbar(x(iLine,:),y(iLine,:),squeeze(sev(:,iLine,:)),1,'-','Color',get(lh(iLine),'color')); hold on;
+        eh{iLine} = rzerrorbar(x(iLine,:),y(iLine,:),squeeze(sev(:,iLine,:)),1,'-','Color',get(lh(iLine),'color')); hold on;
     end
     if ~isempty(seh)
         % deal with horizontal errorbar
@@ -108,14 +110,16 @@ if ~isempty(se)
             setmp(:,:,1) = seh; % upper bound
             setmp(:,:,2) = seh;
             %setmp is a
-            seh = permute(setmp,[3 2 1]); %se is a 2 x line x data matrix
+            seh = permute(setmp,[3 1 2]); %se is a 2 x line x data matrix
         else % in this case, se is a data x line x 2 matrix
-            seh = permute(sev,[3 2 1]);% 2 x line x data matrix
+            seh = permute(sev,[3 1 2]);% 2 x line x data matrix
         end
         seh = reshape(seh,[2 size(y,1) size(y,2)]);% to avoid one line case
+        ehh = cell(1,size(y,1));
         for iLine = 1:length(lh) % loop how many lines we have
-            eh = rzerrorbar(x(iLine,:),y(iLine,:),squeeze(seh(:,iLine,:)),0,'-','Color',get(lh(iLine),'color')); hold on;
+            ehh{iLine} = rzerrorbar(x(iLine,:),y(iLine,:),squeeze(seh(:,iLine,:)),0,'-','Color',get(lh(iLine),'color')); hold on;
         end
+        eh = {eh,ehh};
     end
 else
     eh = [];
