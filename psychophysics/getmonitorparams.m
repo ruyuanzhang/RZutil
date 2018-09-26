@@ -99,8 +99,8 @@ switch monitorname
         mp.resolution = [1920, 1080]; % pixels
         mp.refreshRate = 60; % hz
         mp.viewDist = 60.96; % cm, 2ft
-        mp.pixperdeg = (mp.resolution(1)/2)./ atand(mp.size(1)/2./mp.viewDist); %pix/deg
-        mp.pixperarcmin = mp.pixperdeg/60; %pix/arcmin
+        mp.pixPerDeg = (mp.resolution(1)/2)./ atand(mp.size(1)/2./mp.viewDist); %pix/deg
+        mp.pixPerArcmin = mp.pixperdeg/60; %pix/arcmin
         mp.gamma = 1;
         
     otherwise
