@@ -21,7 +21,9 @@ function prob = psychometriccumgauss(x,threshold,slope,chance,lapse,scale)
 %                   1:log scale, transform all input x into log scale.For
 %                       variable which magnitude is less than 1, we use linear
 %                       scale
-%
+% Output:
+%   <prob>: a vector with the same size of x, probability to make correct response in each
+%       element x
 %Example
 %   x=1:1:100;
 %   myplot(x,psychmetriccumgauss(x,50,10));

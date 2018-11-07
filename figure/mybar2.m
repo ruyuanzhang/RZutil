@@ -44,7 +44,8 @@ numbars = size(y,1);
 groupwidth = min(0.8, numbars/(numbars+1.5));
 
 xLoc_errorbar=zeros(size(y));
-He=zeros(size(y));
+He = zeros(size(y));
+
 
 for i = 1:numbars
       % Based on barweb.m by Bolu Ajiboye from MATLAB File Exchange
@@ -52,9 +53,9 @@ for i = 1:numbars
       %errorbar(x, model_series(:,i), model_error(:,i), 'k', 'linestyle', 'none');
       if ~isempty(E)
           if numel(E)==numel(y) %single error value
-              He(i,:) = flatten(myplot([xLoc_errorbar(i,:);xLoc_errorbar(i,:)],[y(i,:)+E(i,:);y(i,:)-E(i,:)])); hold on;
+              He(i,:) = errorbar2(xLoc_errorbar(i,:),y(i,:),[y(i,:)-E(i,:); y(i,:)+E(i,:)],'v'); hold on;
           elseif numel(E)==2*numel(y) % up and low error value
-              He(i,:) = flatten(myplot([xLoc_errorbar(i,:);xLoc_errorbar(i,:)],[y(i,:)+E(i,:,1);y(i,:)-E(i,:,2)])); hold on;
+              He(i,:) = errorbar2(xLoc_errorbar(i,:),y(i,:),[y(i,:)-E(i,:,2); y(i,:)+E(i,:,1)],'v'); hold on;
           end
       else
           He=[];
@@ -62,7 +63,7 @@ for i = 1:numbars
 end
 % add errorbar. We do not use default errorbar function in matlab. rather,
 % we simply plot a straight line on it. This seems looks prettier.
-set(flatten(He),'LineWidth',6*groupwidth);
+%set(flatten(He),'LineWidth',groupwidth);
 set(flatten(He),'Color',[0 0 0]);%for unix
 set(gca,'Box','off');
 ax=gca;
