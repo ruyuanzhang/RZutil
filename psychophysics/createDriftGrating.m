@@ -1,136 +1,99 @@
-
-function grating = createDriftGrating(radius,varargin)
-% grating = createDriftGrating(radius,varargin)
-%   Quickly gerenate drifting grating for motion study
-%
-%
-% Inputs:
-%   radius:     radius of grating, in pixel
-%
+function p = createdriftgrating(res, varargin)
+% function p = createdriftgrating(res, varargin)
 % 
-% Outputs:
-%   grating:    an N by N martrix with 0~254
-%
-%
+% Inputs:
+%   res:     pixels in one dimension, assuming a square image
 %
 % Optional Inputs:
 %   orientation:    orientation of grating,in deg, default:0 deg, vertical
-%   sf:             spatial frequency in cyc/deg, default: 1 cycle/deg
-%   contrast:       contrast, default:1, full contrast
-%   speed:          how fast things move,default, 4 deg/sec
-%   direction:      direction of motion,default,1,left motion;
-%   amplitude:      maximal amplitude allowed for the shine wave,
-%                   default,:127
-%   background:     gray value of backgrou, default,127;
-%   frameRate:      frame rate of the monitor, default,60HZ, 
-%   scaleFactor:    scaleFactor for this experiment,related to spatial
-%                   frequency
+%   cpfov:          cycles per field of view
+%   TF_step: angles per frame, can calculate as (2*pi*speed*SF)/frame_rate
+%           default:0.4189, it is corresponded to SF = 1 cycles/deg,
+%           speed=4deg/sec, frame_rate=60hz;
+%   contrast:       0~1, contrast, default:1, full contrast
+%   amplitude:      0~127, default,127
+%   maskType:       'cosine'(default), 2D cosine;
+%                   'gaussian',which is 2D gaussian evenlop;
+%                   'circular', a 2D circular envelope
+%   gaussianStdev: pixels, default: 0.7*res/2, only useful if we set
+%       'maskType' to 'gaussian'
+%   mvLen: how many frames to present the stimulus, default:60
+%   temporalMask: (default, all 1) temporal modulation mask vector (0-1), should be the same length
+%       as mvLen 
+%   windowPtr: window pointer, if supplied, we directly make the image into
+%       a texture and return the index of the texture
 %
+% Example;
+%   gratings = createDriftGrating(100,'orientation',90);
+%   gratings = createDriftGrating(100,'orientation',90,'cpfov',4);
+%   gratings = createDriftGrating(100,'orientation',90,'cpfov',4,'windowPtr',w);
 %
-%   mvLength:      how many frames to present stimulus, default,60;
-%   spatialMaskType:   Default,'Cosine',2D cosine,default;
-%                   'Gaussian',which is 2D gaussian evenlop;
-%                   'Circular', a 2D circular envelope
-%   sptatialMaskGaussian,
-%   temporal_mask:  temporal evenlope, defailt, square evenlope
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Example;
-%gratings = createGrating(100,'orientation',90);
-%gratings = createGrating(100,'orientation',90,'sf',4);
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%things to do
-%   1.implmente temporal envelope function
-%   
-
-% Updated RZ 05-02-16
-%   Wrote the function
-
-
+% Notes
+%  1. We input TF_step deg/frame instead of speed (deg/sec) to indicate the
+%   speed. You can easily calculate by (2*pi*speed*SF)/frame_rate
+%  2. We initial the phase as random
 
 %% define default and error signal
-if(~exist('radius','var') || isempty(radius))
-    error('Please input the radius of the round mask');
+if(~exist('res','var') || isempty(res))
+    error('Please input the dimension of the grating');
 end
 
-options = struct(...
+%% parse and merge input
+p = struct(...
         'orientation', 0,...
-        'sf',1,...
+        'cpfov',8,... 
+        'TFstep',0.4189,... % 
         'contrast',1,...
-        'speed',4,...
-        'direction',1,...
         'amplitude',127,...
-        'background', 127,...
-        'scaleFactor',2,...
-        'frameRate',60,...
-        'spatialMaskType','cosine',...
-        'spatialMaskGaussianSigma',2,...
+        'background',127,...
+        'maskType','cosine',...
+        'gaussianStdev', 0.7*res/2,...
         'mvLength',60,...
         'temporalMask',[],...
-        'temporalMaskGaussianSigma',[]);
-
-%% parse options
+        'windowPtr',[]);
 input_opts=mergestruct(varargin{:});
 fn=fieldnames(input_opts);
 for f = 1:numel(fn)
     opt=input_opts.(fn{f});
-    if(~(isnumeric(opt) && isempty(opt)))
-        options.(fn{f})=input_opts.(fn{f});
+    if ~(isnumeric(opt) && isempty(opt)) && isfield(p,fn{f})
+        p.(fn{f})=input_opts.(fn{f});
+    else
+        error('You might input wrong variable: %s', fn{f});
     end
-end
+end 
             
 %% create the spatial mask
-[x,y]=meshgrid(-radius+1:radius,-radius+1:radius);
-bps = (radius)*2;circle=((radius)^2-(x.^2+y.^2));
-for i=1:bps;
-    for j =1:bps;
-        if circle(i,j) < 0; circle(i,j) = 0;
-        else
-            circle(i,j) = 1;
-        end;
-    end;
-end;
-if isequal(options.spatialMaskType,'gaussian')
-    if(isfield(options,'spatialMaskGaussianSigma') || isempty(options.spatialMaskGaussianSigma))
-        error('Please specify the std of spatial gaussian envelope');
-    else
-        circle = (exp(-(((x)/(sqrt(2)*option.spatialMaskGaussianSigma/2)).^2)-((y/(sqrt(2)*option.spatialMaskGaussianSigma/2)).^2)).*circle);
-    end
-elseif isequal(options.spatialMaskType,'cosine')
-    R = (sqrt(x.^2 + y.^2) + eps).*circle;R = R/max(max(R));
-    cos2D = (cos(R*pi)+1)/2;circle = (cos2D.*circle); 
-end
-    
-
-if(isfield(options,'temporalMaskGaussianSigma') || isempty(options.temporalMaskGaussianSigma))
-    options.temporalMask = ones(1,options.mvLength);
+if strcmp(p.maskType,'gaussian')
+    spatialMask = createmask(res,'maskType',p.maskType,'gaussianStd',p.gaussianStd);
 else
-    options.temporalMask = envelope();
+    spatialMask = createmask(res,'maskType', p.maskType);
 end
+spatialMask = 1-spatialMask(:,:,2);
 
-
-%% motion related stuff
-%make the movie
-options.TF = options.sf*options.speed;
-TFstep = (2*pi*options.TF)/options.frameRate;
-motion_step(1) = rand*2*pi;
-for i=2:options.mvLength;
-    motion_step(i) = motion_step(i-1)-options.direction*TFstep;
+%% deal with temporal Mask
+if isempty(p.temporalMask)
+    p.temporalMask=ones(1,p.mvLength);
+else
+    assert(length(p.temporalMask)==p.mvLength,'The length of thetemporal mask should be mvLen!');
 end
+%% generating drift grating images
+f=p.cpfov * 2 * pi;
+a=cosd(p.orientation)*f; b=sind(p.orientation)*f;
+p.amplitude = p.amplitude*p.contrast;
+driftGratingImg = zeros(res,res,p.mvLength);
+[xx,yy]=calcunitcoordinates(res);
+motion_step = rand*2*pi * ones(1, p.mvLength);
+p.motion_step = (0:p.mvLength-1)*p.TFstep + motion_step;
 
-%% generating grating images
-f=(options.sf*options.scaleFactor/60)*2*pi;
-a=cosd(options.orientation)*f; b=sind(options.orientation)*f;
-gratingImg = zeros(bps,bps,options.mvLength);
-
-for i = 1:options.mvLength
-    gratingImg(:,:,i) = round(((sin(a*x+b*y+motion_step(i)).*circle*options.amplitude*options.temporalMask(i))+options.background));
+for i = 1:p.mvLength
+    driftGratingImg(:,:,i) = round(((sin(a*xx+b*yy+p.motion_step(i)).*spatialMask*p.amplitude*p.temporalMask(i))+p.background));
+    if ~isempty(p.windowPtr)
+        driftGratingMovie{i}=Screen('MakeTexture', p.windowPtr, driftGratingImg(:,:,i));
+    end
 end
-gratingImg = uint8(gratingImg);    
-
 %% output should be a struct
-options.gratingImg = gratingImg;
-grating = options;
+p.driftGratingImg = driftGratingImg;
+if ~isempty(p.windowPtr)
+    p.driftGratingMovie = driftGratingMovie;
+end
 end

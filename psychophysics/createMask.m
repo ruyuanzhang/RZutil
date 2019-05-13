@@ -1,100 +1,74 @@
-% draw a circular mask on the stimulus
-function mask = createMask(radius,varargin)
-% maskCOS = SetupCircularMask(radius,w,maskType)
+function mask = createmask(res, varargin)
+% mask = createMask(radius,varargin)
 % 
 % Inputs:
-%   radius:     radius of this circular of this circular mask in number of
-%               pixel
+%   res:   number of pixels of the image, assuming a square image
 %
-% Outputs:
-%   mask:       the output mask as a texture which is ready to present on a
-%               screen using Screen('DrawTexture') function
-%
-%
-%
-% Optional Inputs:
-%   maskType:   Default,'Cosine',2D cosine,default;
-%               'Gaussian',which is 2D gaussian evenlop;
-%               'Circular', a 2D circular envelope,
-%               'Annulus', a 2D annulus envelope, need to specify inner
-%                   radius
-%               'squre'
-%
-%   background: background gray scale value,default, 127
-%   white:      surface gray scale value,default,254
-%
-%
-%
-
+% Optional varargin:
+%   maskType:   'cosine', 2D cosine,default (default);
+%               'gaussian',which is 2D gaussian evenlop;
+%               'circular', a 2D circular envelope,
+%               'annulus', a 2D annulus envelope, need to specify inner
+%                   res
+%   radius2: for Annulus option,number of pixels, default:(0.7 * res/2)
+%   
+%   gaussianStdev: standard devision for Gaussian mask,number of pixels,
+%           default:(0.7 * res/2)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %Example;
+% Figure; a=createMask(100);imagesc(a(:,:,2))
+% Figure; a=createMask(100,'maskType','gaussian');imagesc(a(:,:,2))
+% Figure; a=createMask(100,'maskType','annulus');imagesc(a(:,:,2))
 
-
-
-% Updated RZ 04-28-16
-%   Wrote the function
-
+% Note that we use kk's makecircleimage function to generate annulus image
 
 
 %% define default and error signal
-if(~exist('radius','var') || isempty(radius))
-    error('Please input the radius of the round mask');
+if(~exist('res','var') || isempty(res))
+    error('Please input the res of the round mask');
 end
-
-options = struct(...
+p = struct(...
         'maskType','cosine',...
         'white',254,...
         'background',127,...
-        'innerRadius',0.7*radius);
-
+        'radius2',0.7*res/2,...
+        'gaussianStd',0.7*res/2);
 %parse options
 input_opts=mergestruct(varargin{:});
 fn=fieldnames(input_opts);
 for f = 1:numel(fn)
     opt=input_opts.(fn{f});
-    if(~(isnumeric(opt) && isempty(opt)))
-        options.(fn{f})=input_opts.(fn{f});
+    if(~(isnumeric(opt) && isempty(opt))) && isfield(p,fn{f})
+        p.(fn{f})=input_opts.(fn{f});
     end
 end
             
-%%
-[x,y]=meshgrid(-radius:radius,-radius:radius);
-bps = (radius)*2+1;circle=((radius)^2-(x.^2+y.^2));
-for i=1:bps
-    for j =1:bps
-        if circle(i,j) < 0; circle(i,j) = 0;
-        else
-            circle(i,j) = 1;
-        end
-    end
-end
-if isequal(options.maskType,'gaussian')
-    circle = (exp(-(((x)/(sqrt(2)*Gaussian_stdev/2)).^2)-((y/(sqrt(2)*Gaussian_stdev/2)).^2)).*circle);
-elseif isequal(options.maskType,'cosine')
-    R = (sqrt(x.^2 + y.^2) + eps).*circle;R = R/max(max(R));
-    cos2D = (cos(R*pi)+1)/2;circle = (cos2D.*circle);  
-elseif isequal(options.maskType,'annulus')
-    circle = 1-circle;
-    [x,y]=meshgrid(-options.innerRadius:options.innerRadius,-options.innerRadius:options.innerRadius);
-    innerbps = (options.innerRadius)*2+1;innerCircle=((options.innerRadius)^2-(x.^2+y.^2));
-    for i=1:innerbps;
-        for j =1:innerbps;
-            if innerCircle(i,j) < 0; innerCircle(i,j) = 0;
-            else
-                innerCircle(i,j) = 1;
-            end;
-        end;
-    end;
-    circle(round(end/2)-options.innerRadius:round(end/2)+options.innerRadius,round(end/2)-options.innerRadius:round(end/2)+options.innerRadius) = innerCircle; 
-    
-    %innerCircle;
+%% convert to unit length
+[xx, yy]=calcunitcoordinates(res);
+p.radius = 0.5; % default outter radius
+p.radius2 = p.radius2/res;
+p.gaussianStd=p.gaussianStd/res;
+
+%% make the circular dis
+circle=p.radius^2-(xx.^2+yy.^2);
+circle(circle<=0)=0;
+circle(circle>0)=1; % circular mask
+
+%% make gaussian and cosin disk
+if isequal(p.maskType,'gaussian') % Gaussian Disk, you have to specify gaussianStd
+    circle = (exp(-(((xx)/(sqrt(2)*p.gaussianStd/2)).^2)-((yy/(sqrt(2)*p.gaussianStd/2)).^2)).*circle);
+elseif isequal(p.maskType,'cosine') 
+    R = (sqrt(xx.^2 + yy.^2) + eps).*circle;R = R/max(max(R));
+    cos2D = (cos(R*pi)+1)/2; circle = (cos2D.*circle);  
+elseif isequal(p.maskType,'annulus')
+    circle = makecircleimage(res, p.radius2*res, xx, yy, p.radius*res);
 end
 
-
-circleMask = zeros(size(circle,1), size(circle,1), 2);
-circleMask(:,:,2)=(1-circle)*options.white;
-circleMask(:,:,1)=ones(bps,bps)*options.background;
+%% convert to the format that can be used to create filter for screen function
+circleMask = zeros(size(circle,1), size(circle,2), 2);
+circleMask(:,:,2)=(1-circle);
+circleMask(:,:,1)=ones(res, res);
 mask=circleMask;
 
 end

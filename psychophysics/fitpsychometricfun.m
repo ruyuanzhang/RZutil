@@ -1,10 +1,10 @@
-function [paramsfit, plikeli] = fitpsychometricfun(stim, choice, form, psychometriParams, wantfig)
-% function [paramsfit, plikeli] = fitpsychometricfun(stim, choice, form, psychometriParams, wantfig)
+function [paramsfit, plikeli] = fitpsychometricfun(stim, choice, form, psychometricParams, wantfig)
+% function [paramsfit, plikeli] = fitpsychmetricfun(stim, choice, form, psychometricParams, wantfig)
 %
 % quickly fit psychometric function for choice using maximu likelihood
 % method
 %
-% <choice>: a vector of stimulus intensity
+% <stim>: a vector of stimulus intensity
 % <choice>: a vector of binary, 0,1, indicating two choices or
 %   wrong/correct
 % <form>: a string, name of psychmetric function
@@ -21,7 +21,7 @@ function [paramsfit, plikeli] = fitpsychometricfun(stim, choice, form, psychomet
 %   "thresholdaccu": the accuracy level corresponding to threshold,
 %       default:0.82, 
 %   "chance": chance level, default:0.5
-%   "scale": 0, linear;1, logscale
+%   "scale": 0 (default), linear;1, logscale
 % <wantfig>: bool, whether to plot the fit figure
 %
 % This function output the <paramsfit>, the fitted parametes and the minimal POSITIVE
@@ -54,8 +54,8 @@ end
 if ~exist('form', 'var')| isempty(form)
     form = 'weibull';
 end
-if ~exist('psychometriParams','var') | isempty(psychometriParams)
-    psychometriParams = struct('threshold', nan);
+if ~exist('psychometricParams','var') | isempty(psychometricParams)
+    psychometricParams = struct('threshold', nan);
 end
 if ~exist('wantfig','var') | isempty(wantfig)
     wantfig = 0;
@@ -78,7 +78,7 @@ p = struct(...
     'chance',0.5,...
     'scale',0);
 % update and converge the structs
-p = mergestruct(p, psychometriParams);
+p = mergestruct(p, psychometricParams);
 
 % preparefitting
 options = optimset('Algorithm','active-set','MaxFunEvals',1e+5,'MaxIter',1e+5);
@@ -143,16 +143,16 @@ end
 
 
 % the function to calculate postivie likelihood
-function poslikeli = computeposlikeli(params, stim, choice, form, psychometriParams)
+function poslikeli = computeposlikeli(params, stim, choice, form, psychmetricParams)
     
     % decomposate the parameter for weibull psychometric function
     threshold = params(1);
     slope = params(2);
     lapse  = params(3);
     
-    thresholdaccu = choose(isfield(psychometriParams, 'thresholdaccu'), psychometriParams.thresholdaccu, []);
-    chance = choose(isfield(psychometriParams, 'chance'), psychometriParams.chance, []);
-    scale  = choose(isfield(psychometriParams, 'scale'), psychometriParams.scale, []);
+    thresholdaccu = choose(isfield(psychmetricParams, 'thresholdaccu'), psychmetricParams.thresholdaccu, []);
+    chance = choose(isfield(psychmetricParams, 'chance'), psychmetricParams.chance, []);
+    scale  = choose(isfield(psychmetricParams, 'scale'), psychmetricParams.scale, []);
         
     if strcmp(form,'weibull') % weibull psychometric function
         prob = psychometricweibull(stim, threshold, slope, thresholdaccu, chance, lapse, scale);
