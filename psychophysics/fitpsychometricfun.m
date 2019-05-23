@@ -89,7 +89,7 @@ options = optimset('Algorithm','active-set','MaxFunEvals',1e+5,'MaxIter',1e+5);
 % figure lower and upper bound of parameters
 LB = zeros(1, 3);
 UB = zeros(1, 3);
-LB(1) = mean(stim);
+LB(1) = min(stim);
 UB(1) = max(stim);
 if isnan(p.slope) % we set slope as a free parameter
     LB(2) = 1e-5;
@@ -112,11 +112,11 @@ fprintf(sprintf('fit %s psychometric functions 10 times ... \n', form));
 paramsfitMat = zeros(10,4);
 for i = 1:10
     params0 = [LB(1) + rand*(UB(1)-LB(1)), LB(2) + rand*(UB(2)-LB(2)), LB(3) + rand*(UB(3)-LB(3))];
-    [paramsfitMat(1,1:3), paramsfitMat(1,4)]= fminsearchbnd(@(params) computeposlikeli(params, stim,choice,form,p),params0, LB, UB, options);
-    %[paramsfitMat(i,1:3), paramsfitMat(i,4)]= fminsearchbnd(@(params) computeposlikeli(params, stim,choice,form,p),params0, LB, UB, options);
+    %[paramsfitMat(1,1:3), paramsfitMat(1,4)]= fminsearchbnd(@(params) computeposlikeli(params, stim,choice,form,p),params0, LB, UB, options);
+    [paramsfitMat(i,1:3), paramsfitMat(i,4)]= fminsearchbnd(@(params) computeposlikeli(params, stim,choice,form,p),params0, LB, UB, options);
 end
 fprintf('Done. \n');
-[~,ind] = max(paramsfitMat(:,4));
+[~,ind] = min(paramsfitMat(:,4));
 paramsfit= paramsfitMat(ind,1:3);
 plikeli= paramsfitMat(ind,4);
     
@@ -148,7 +148,7 @@ end
 end
 
 
-% the function to calculate postivie likelihood
+% The function to calculate postivie likelihood
 function poslikeli = computeposlikeli(params, stim, choice, form, psychmetricParams)
     
     % decomposate the parameter for weibull psychometric function
