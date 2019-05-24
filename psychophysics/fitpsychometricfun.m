@@ -113,7 +113,7 @@ paramsfitMat = zeros(10,4);
 for i = 1:10
     params0 = [LB(1) + rand*(UB(1)-LB(1)), LB(2) + rand*(UB(2)-LB(2)), LB(3) + rand*(UB(3)-LB(3))];
     %[paramsfitMat(1,1:3), paramsfitMat(1,4)]= fminsearchbnd(@(params) computeposlikeli(params, stim,choice,form,p),params0, LB, UB, options);
-    [paramsfitMat(i,1:3), paramsfitMat(i,4)]= fminsearchbnd(@(params) computeposlikeli(params, stim,choice,form,p),params0, LB, UB, options);
+    [paramsfitMat(i,1:3), paramsfitMat(i,4)]= fmincon(@(params) computeposlikeli(params, stim, choice, form, p),params0, [],[],[],[],LB, UB, [], options);
 end
 fprintf('Done. \n');
 [~,ind] = min(paramsfitMat(:,4));
@@ -126,20 +126,20 @@ if wantfig % want to visualize
     scatter(stim(choice==0), p.chance* ones(1,length(stim(choice==0))), 'ko'); hold on;
     scatter(stim(choice==1), ones(1,length(stim(choice==1))), 'ro');
     if strcmpi(form, 'weibull')
-        myplot(linspace(min(stim), max(stim),100), psychometricweibull(linspace(min(stim), max(stim),100), paramsfit(1), paramsfit(2),...
+        myplot(linspace(min(stim), max(stim)+20,100), psychometricweibull(linspace(1, max(stim),100), paramsfit(1), paramsfit(2),...
             p.thresholdaccu, p.chance, paramsfit(3), p.scale));
     elseif strcmpi(form, 'cumgauss')
-        myplot(linspace(min(stim), max(stim),100), psychometriccumgauss(linspace(min(stim), max(stim),100), paramsfit(1), paramsfit(2),...
+        myplot(linspace(min(stim), max(stim)+20,100), psychometriccumgauss(linspace(min(stim), max(stim),100), paramsfit(1), paramsfit(2),...
             p.chance, paramsfit(3), p.scale));
     end
-    axis([min(stim), max(stim), p.chance, 1]);
+    axis([1, max(stim), p.chance, 1]);
     legend({'incorrect trials', 'correct trials', 'psychometric curve'},'Location','east');
     xlabel('stimuli');
     ylabel('probability');
     title(sprintf('positive likelhood is %.04f', plikeli))
     if p.scale == 1 
         set(gca, 'XScale','log');
-        axis([0, max(stim)*1.2, p.chance, 1]);
+        axis([1, max(stim)*1.2, p.chance, 1]);
     else
         axis([min(stim), max(stim), p.chance, 1]);
     end

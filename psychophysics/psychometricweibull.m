@@ -55,7 +55,7 @@ end
 
 
 %% check input
-assert(chance>=0&(chance<=1)); % chance level should be within (0,1)
+assert(chance>=0 & (chance<=1)); % chance level should be within (0,1)
 assert(thresholdaccu>=chance); % threshold accuracy should >= chance
 assert(lapse >= 0);% lapse should >=0;
 
@@ -69,7 +69,7 @@ end
 
 %%
 k = (-log((1-thresholdaccu)/(1-chance)))^(1/slope);
-prob = 1-lapse - (1-chance-lapse)*exp(-(k*x/threshold.^slope)); % hack here to avoid the complex number of power operation
+prob = 1-lapse - (1-chance-lapse)*exp(-(k*x/threshold).^slope); % hack here to avoid the complex number of power operation
 
 % avoid small negative number
 prob(prob<0) = 0;
