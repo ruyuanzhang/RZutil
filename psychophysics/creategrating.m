@@ -4,7 +4,7 @@ function p = creategrating(res, varargin)
 % 
 % Inputs:
 %   res:     pixels in one dimension, assuming a square image
-
+%
 % Optional Inputs:
 %   orientation:    orientation of grating,in deg, default:0 deg, vertical
 %   cpfov:          cycles per field of view
@@ -59,6 +59,8 @@ end
 %% create the spatial mask
 if strcmp(p.maskType,'gaussian')
     spatialMask = createmask(res,'maskType',p.maskType,'gaussianStd',p.gaussianStd);
+elseif strcmp(p.maskType,'none') % no mask
+    spatialMask = zeros(res,res, 2);
 else
     spatialMask = createmask(res,'maskType', p.maskType);
 end
