@@ -1,6 +1,6 @@
 
-function [Hb,He,ax]= mybar3(x,y,E)
-% function [Hb,He,ax]= mybar3(x,y,E)
+function [Hb,He,xLoc_errorbar]= mybar3(x,y,E)
+% function [Hb,He,xLoc_errorbar]= mybar3(x,y,E)
 % 
 % Similar function to mybar.m and mybar2.m, see input and output
 % description in mybar.m

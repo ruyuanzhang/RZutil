@@ -1,9 +1,9 @@
 function savetxtdata(filename, data, varargin)
 %
 %
-% savetxtdata('./bvec', '%d %d %d')
-% savetxtdata('./bvec', '%f %f %f')
-% savetxtdata('./bvec', '%f')
+% savetxtdata('./bvec', m, '%d %d %d')
+% savetxtdata('./bvec', m, '%f %f %f')
+% savetxtdata('./bvec', m, '%f')
 
 if ~exist('filename','var')||isempty(filename)
    error('Input filename error'); 

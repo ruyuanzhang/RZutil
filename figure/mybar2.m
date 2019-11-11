@@ -1,5 +1,5 @@
 
-function [Hb,He,ax]= mybar2(x,y,E)
+function [Hb,He,xLoc_errorbar]= mybar2(x,y,E)
 % function [Hb,He,ax]= mybar2(x,y,E)
 %
 % This function is another version of mybar.m see input and output

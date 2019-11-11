@@ -1,6 +1,6 @@
 
-function [Hb,He,ax]= mybar(x,y,E)
-% function [Hb,He,ax]= mybar(x,y,E)
+function [Hb,He,xLoc_errorbar]= mybar(x,y,E)
+% function [Hb,He, xLoc_errorbar]= mybar(x,y,E)
 %
 % This function is to plot a grouped bar figure with much easier efforts.And
 % I did some optimizations for overal controlling of the figure
@@ -21,7 +21,7 @@ function [Hb,He,ax]= mybar(x,y,E)
 % Output:
 %     Hb: handle of the bar part
 %     He: handle of the errorbar part
-%     ax: handle of the ax part
+%     xLoc_errorbar: x location of errorbar
 %
 % Note:
 %   The style of errorbar in this function is inherited from matlab
