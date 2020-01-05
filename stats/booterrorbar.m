@@ -1,4 +1,4 @@
-function er = booterrorbar(x,metric,errorFormat,prcntage,nBoot)
+function er = booterrorbar(x,metric, errorFormat, prcntage, nBoot)
 % function booterrorbar(x,metric,errorFormat,prcntage,nBoot)
 %
 % Estimate the errorbar given a vector and a metric
@@ -7,7 +7,7 @@ function er = booterrorbar(x,metric,errorFormat,prcntage,nBoot)
 %   <x>: input vector, can be ROW or COLUMN, we flatten it to row
 %   
 %   <metric>(optional): a string, specify 'mean'(default),'median','nanmean','nanmedian';
-%       errorFormat: a string:
+%   <errorFormat>: a string:
 %           'single': (default) return a single number,half of the range between
 %               low/up range.
 %           'bound': return two number, upper and lower bound
