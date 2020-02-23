@@ -35,7 +35,7 @@ if ~exist('y','var')||isempty(y)
 end
 if ~exist('er','var')||isempty(er)
     error('Please input row vector y');
-end
+end 
 if ~exist('er','var')||isempty(er)
     direction = 1; % default errorbar in y direction
 end

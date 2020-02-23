@@ -2,7 +2,7 @@ function outputse = se(x,dim)
 % function outputse = se(x,dim)
 %
 % compute standard error of a samples in a vector, we rely on std.m function in
-% matlab, 
+% matlab. For nan values, we use nanstd to ignore it.
 %
 % Input:
 %   x: matrix
@@ -29,7 +29,7 @@ end
 if any(isnan(x))
     error('Please deal with nan values in your data');
 else
-    outputse = std(x,[],dim)/sqrt(size(x,dim)); 
+    outputse = nanstd(x,[],dim)/sqrt(size(x,dim)); 
     % denominator count nan
 end
 

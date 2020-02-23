@@ -6,6 +6,8 @@ function mailme(mailtitle,mailcontent, password, receiver)
 % <receiver>: receiver email
 %
 %
+% 20200105 RZ switch 163 mail, gmail is hard to configure
+
 if notDefined('mailtitle')
     error('Please input mailtitle');
 end

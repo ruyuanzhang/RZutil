@@ -30,6 +30,7 @@ function mp = getmonitorparams(monitorname,varargin)
 % Currently support monitors are:
 %   'uminn7tpsboldscreen'
 %   'uminnofficedesk'
+%   'nih7T'
 %   'uminn7tpsvpixx' (to do)
 %   'uminn3tbprojector' (to do)
 %
@@ -39,10 +40,10 @@ function mp = getmonitorparams(monitorname,varargin)
 %
 %
 % History:
+%   20200221 RZ added support for 'nih7t'
 %   20180625 RZ added support for 'uminnmacpro'
 %   20180425 RZ created it
-%   
-%
+
 
 % we use thie regular expression
 
@@ -100,9 +101,17 @@ switch monitorname
         mp.refreshRate = 60; % hz
         mp.viewDist = 60.96; % cm, 2ft
         mp.pixPerDeg = (mp.resolution(1)/2)./ atand(mp.size(1)/2./mp.viewDist); %pix/deg
-        mp.pixPerArcmin = mp.pixperdeg/60; %pix/arcmin
+        mp.pixPerArcmin = mp.pixPerDeg/60; %pix/arcmin
         mp.gamma = 1;
-        
+    case 'nih7t' 
+        mp.monitorName = 'nih7t';
+        mp.size = [23, 18];  % cm
+        mp.resolution = [800, 600]; % pixels
+        mp.refreshRate = 60; % hz
+        mp.viewDist = 64; % cm, 2ft
+        mp.pixPerDeg = (mp.resolution(1)/2)./ atand(mp.size(1)/2./mp.viewDist); %pix/deg
+        mp.pixPerArcmin = mp.pixPerDeg/60; %pix/arcmin
+        mp.gamma = 1;        
     otherwise
         error('Can not find the monitor file !')
 
