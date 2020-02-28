@@ -23,9 +23,9 @@ end
 % do it
 win = Screen('Windows');
 if ~isempty(oldclut)
-  Screen('LoadNormalizedGammaTable',win,oldclut);
+  Screen('LoadNormalizedGammaTable', win, oldclut);
 end
-Screen('Close',win);
+Screen('Close', win);
 Screen('CloseAll');
 
 % deal with stereo stuff

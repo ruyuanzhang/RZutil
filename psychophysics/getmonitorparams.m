@@ -112,6 +112,15 @@ switch monitorname
         mp.pixPerDeg = (mp.resolution(1)/2)./ atand(mp.size(1)/2./mp.viewDist); %pix/deg
         mp.pixPerArcmin = mp.pixPerDeg/60; %pix/arcmin
         mp.gamma = 1;        
+    case 'nihofficedesk' 
+        mp.monitorName = 'nihofficedesk';
+        mp.size = [53.85, 35.56];  % cm
+        mp.resolution = [1920, 1080]; % pixels
+        mp.refreshRate = 60; % hz
+        mp.viewDist = 70; % cm
+        mp.pixPerDeg = (mp.resolution(1)/2)./ atand(mp.size(1)/2./mp.viewDist); %pix/deg
+        mp.pixPerArcmin = mp.pixPerDeg/60; %pix/arcmin
+        mp.gamma = 1;        
     otherwise
         error('Can not find the monitor file !')
 

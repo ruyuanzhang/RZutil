@@ -1,4 +1,4 @@
-function [timing,keys] = cleankeypress(timekeys,trigger)
+function [timing, keys] = cleankeypress(timekeys,trigger)
 % function output = cleankeypress(timekeys,trigger)
 % clean up button press data saved by ptviewmoview.m function. Basically it
 % deals with two problems
