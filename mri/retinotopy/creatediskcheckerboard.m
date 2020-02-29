@@ -37,7 +37,7 @@ end
 % translate to polar coordinate
 theta = atan2(y, x); % theta range [-pi, pi]
 r = sqrt(x.^2 + y.^2);
-mask1 = 2*round((sin(theta * nWedge)+1)/2)-1; % mask1 [0, 1]
+mask1 = 2*round((sin(theta * nWedge/2)+1)/2)-1; % mask1 [0, 1]
 
 
 % deal with eccentricity

@@ -1,4 +1,4 @@
-function runretinotopic_old(expNo)
+function runretinotopic_old(expNo, subjNo)
 % This is the program to run retinotopic mapping conventional checkerboard
 % method. Check runretinotopic.m written by KK for more advanced PRF
 % approach. 
@@ -15,9 +15,9 @@ function runretinotopic_old(expNo)
 % cycles depends on <expNo>. A <blankBeginEnd, 16> secs blank is also added
 % to the beginning and the end of each run. A run lasts 300s = 5min.
 %
-% Checkerboard is default 768 x 768 pixels. But we set movieRect dimension
+% Checkerboard is default 1080 x 1080 pixels. But we set movieRect dimension
 % as height of a monitor (i.e., winRect(4)). CheckerBoard flickers at
-% <flickerRate, 5> HZ. by default. There are <nCheckerRing, 8> rings and 
+% <flickerRate, 5> HZ. by default. There are <nCheckerRing, 16> rings and 
 % <nCheckerWedge, 16> steps of wedges on the checkerboard.
 % 
 % The wedge masks we create starts from the wedge at the vertial-up
@@ -39,23 +39,38 @@ function runretinotopic_old(expNo)
 % expNo=6, CTR only rings,    order is CTR-CTR-CTR-CTR
 % expNo=7, wedges and rings,  order is CCW-CW-EXP-CTR
 % 
-% We output one figure
+% We output one figure show the duration of each movie frame, and one
+% figure illustrating the onset of fixation target and behavior response.
+% We also save the data as usual formats.
+%
+% We now analyze behavioral data using 'analyzebehaviorretinotopic.m'
+% function
 %
 % To do:
-%   1. Make the stimulus shorter and more cycles?? 
+%   1. Make the stimulus shorter and more cycles?? better need to
 %   2. Make the wedge or ring steps, stimulus duration as functions??
-%   3. optimize welcome text
-%   4. write about output.
+%   3. Write about output.
 %
 % History:
+%   20200228 RZ fixed some bugs in auxililary function. Also set default
+%       dimension to 1080 and default ring numbers <sp.nCheckerRing> on
+%       checkerboard images to 16;
 %   20200227 RZ almost completed the first version. RZ fix stimulus
 %       duration and number of wedge and ring steps.
 
 
+if notDefined('expNo')
+    expNo = 7; % default to both wedge and ring
+end
+if notDefined('subjNo')
+    subjNo = 99;
+end
+
+sp.expNo = expNo;
+sp.subjNo = subjNo;
 %% Some high-level controls
 
-% experiment 
-sp.expNo = expNo;
+% Experiment 
 sp.blankBeginEnd = 16; % secs, blank at begining and end
 sp.cycleITI = 4; % secs, interval between two consecutive cycles
 % How many monitor freshes per movie frame.
@@ -70,11 +85,11 @@ sp.nCycle = 4; % How many wedge or ring cycles.
 % Stimulus parameters
 sp.nWedgeStep = 8; % how many steps for the wedge mask, from upper vertical to CCW direction
 sp.nRingStep = 8; % how many steps for the ring mask, from fovea to peripery
-sp.dim = 768; % default dimensions, you can set it as the height of the monitor
+sp.dim = 1080; % default dimensions, you can set it as the height of the monitor
 
 % how many checkerboard Ring, note this is not no of ring masks, better to
 % set it to the same or times of sp.nRingStep
-sp.nCheckerRing = 8;
+sp.nCheckerRing = 16;
 
 % How many wedges in the checkerboard stimuli, better to set it to the same
 % or times of sp.nWedgeStep
@@ -87,8 +102,6 @@ sp.nFramePerSec = sp.freshRate / sp.frameDur; % How many movie frames per sec
 
 [sp.deviceNum, sp.deviceName] = GetKeyboardIndices;
 [sp.deviceNum, sp.deviceName] = deal(sp.deviceNum(end), sp.deviceName{end});
-
-sp.fixSize = sp.dim * 0.02; % pixes
 
 sp.COLOR_BLACK = 0;
 sp.COLOR_GRAY = 127;
@@ -111,22 +124,14 @@ fprintf('done\n');
 % sp.fixColorOrder and sp.colors for fixation task
 sp = createframeorder(sp);
 
-% We output some auxilllary information about the experiment.
-fprintf('The expName is %s \n', sp.expName);
-fprintf('Each stimulus is %d sec, %d cycles in total. %d s between two cycles, %ds blank at beginning and end.\n',sp.stimDur, sp.nCycle, sp.cycleITI, sp.blankBeginEnd);
-fprintf('The whole run will last %d secs.\n', sp.totalSecs);
-fprintf('Checkerboard will flicker at %d HZ.\n', sp.flickerRate);
-fprintf('%.3f s per movie frame.\n', 1/sp.nFramePerSec);
-fprintf('We listen input from device No. %d, %s \n', sp.deviceNum, sp.deviceName);
-
-
 %% ========= window setup ===========
 commandwindow;
 HideCursor;
-%[win, winRect, oldclut] = pton([],[],[],1);
-[win, winRect, oldclut] = pton([],0.5,[],1);
+[win, winRect, oldclut] = pton([],[],[],1); % for debug
+%[win, winRect, oldclut] = pton([],0.5,[],1);
 Screen('BlendFunction',win,GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 mfi = Screen('GetFlipInterval',win);  % re-use what was found upon initialization!
+sp.fixSize = winRect(4) * 0.015;
 
 % calculate movieRect and fixation Rect
 movieRect = [0 0 winRect(4) winRect(4)]; % note here we default to set the dimension to monitor height
@@ -153,7 +158,9 @@ end
 sp.frameFlipTime = [];
 sp.triggerKey = '5%'; % the key to start the experiment
 
-welcomeText = '<color=1.,1.,1.>Press "5" to start the experiment\n Press "1" to respond when the ring turns red';
+welcomeText = ['<color=0.,0.,0.>Press "5" to start the experiment\n'...
+    'Press "1" to respond when the fixation turns red\n' ...
+    'IMPORTANT! Please always keep your eye fixation on the central point of the screen throughout the experiment!'];
 
 % show welcome text or instruction
 Screen('FillRect', win, sp.COLOR_GRAY, winRect);
@@ -165,8 +172,24 @@ if sp.wantFormattedString
 end
 Screen('Flip',win);
 
-fprintf('press a key to begin the movie. (make sure to turn off network, energy saver, spotlight, software updates! mirror mode on!)\n');
-getkeyresp(sp.triggerKey, -3); % get key respond and proceed
+%% Show some experiment information for diagnostic purposes
+% We output some auxilllary information about the experiment.
+fprintf('\nThe expName is %s \n', sp.expName);
+fprintf('Each stimulus is %d sec, %d cycles in total. %d s between two cycles, %ds blank at beginning and end.\n',sp.stimDur, sp.nCycle, sp.cycleITI, sp.blankBeginEnd);
+fprintf('The whole run will last %d secs.\n', sp.totalSecs);
+fprintf('Checkerboard will flicker at %d HZ.\n', sp.flickerRate);
+fprintf('%.3f s per movie frame.\n', 1/sp.nFramePerSec);
+fprintf('We listen input from device No. %d, %s \n', sp.deviceNum, sp.deviceName);
+
+% print window information
+fprintf('\nOpen window No. %d, winRect width %d height %d pixels. \n', win, winRect(4), winRect(3));
+fprintf('Monitor flip interval is %.6f. \n', mfi);
+
+fprintf('\npress a key to begin the movie. (make sure to turn off network, energy saver, spotlight, software updates! mirror mode on!)\n');
+
+
+%% trigger the experiment
+getkeyresp(sp.triggerKey, -3); % get key respond and trigger the experiment.
 fprintf('Experiment starts!\n');
 Screen('Flip',win);
 % issue the trigger and record it
@@ -188,9 +211,6 @@ KbQueueStart(sp.deviceNum);
 % do it;
 for iFrame = 1 :sp.nFrame
     
-    % draw fixation
-    Screen('FillOval', win, sp.fixColors(sp.fixColorOrder(iFrame), :), sp.fixRect);
-    
     % draw images
     if sp.checkerFrameOrder(iFrame) ~= 0
         Screen('DrawTexture', win, texture(sp.checkerFrameOrder(iFrame)), [], sp.movieRect, 0, [], 1);
@@ -198,7 +218,10 @@ for iFrame = 1 :sp.nFrame
         Screen('DrawTexture', win, maskTex(sp.maskFrameOrder(iFrame)), [], sp.movieRect, 0, [], 1);
         
     end
-       
+    
+    % draw fixation
+    Screen('FillOval', win, sp.fixColors(sp.fixColorOrder(iFrame), :), sp.fixRect);
+    
     % flip the window and update the flipStruct   
     [flipTime, flipStruct] = updateflip(flipStruct);
     sp.frameFlipTime = [sp.frameFlipTime flipTime]; % record the frameFlipTime
@@ -211,30 +234,31 @@ for iFrame = 1 :sp.nFrame
     
 end
 KbQueueStop(sp.deviceNum); % stop listen the keyboard
+Screen('Close', texture); % you need to close all texture before you call ptoff
+Screen('Close', maskTex); % you need to close all texture before you call ptoff
+ptoff(oldclut);
+ShowCursor;
 
 %%
-Screen('Close', texture); % you need to close all texture before you call ptoff
-ptoff(oldclut);
 % extract keyboard event
 [sp.keys, sp.keyPressTime, sp.keyCode] = getkeyboardevent(sp.deviceNum); % remember to extract the event before release kbqueue
-
 KbQueueRelease(sp.deviceNum); % release KbQueueRelease
 KbReleaseWait(sp.deviceNum);
 
 sp.keyPressTime = sp.keyPressTime - sp.frameFlipTime(1); % reference to the onset of the first movie frame
 sp.frameFlipTime = sp.frameFlipTime - sp.frameFlipTime(1);
 sp.realRunTime = sp.frameFlipTime(end) + sp.frameDur * mfi;
-fprintf('\nThis run took %.4f secs, the desired time is %.4f secs \n', sp.realRunTime, sp.secPerRun);
+fprintf('\nThis run took %.4f secs, the desired time is %.4f secs \n', sp.realRunTime, sp.totalSecs);
 
-% visualize timing information
+% Visualize timing information
 myplot(1:length(sp.frameFlipTime)-1, diff(sp.frameFlipTime));
-xlabel('Frame');ylabel('Frame duration');
+xlabel('Frame');ylabel('Frame duration (secs)');
 
-% analyze behavioral data
-%analyzebehaviorMRI;
+% analyze behavioral data and visualize
+analyzebehaviorretinotopic;
 
 %% clean up and save data
-filename=sprintf('%s_retinotopy%s_subj%02d', datestr(now, 'yyyymmddHHMMSS'), sp.expName, sp.subj);
+filename=sprintf('%s_retinotopy%s_subj%02d', datestr(now, 'yyyymmddHHMMSS'), sp.expName, sp.subjNo);
 save(filename); % save everything to the file;
 
 end

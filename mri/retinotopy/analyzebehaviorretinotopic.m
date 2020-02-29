@@ -11,17 +11,14 @@ fixTargetIdx = find(sp.fixTargetOnset);
 
 nTarget = length(fixTargetIdx); % How many total index;
 
-keyPressTimeTmp = sp.keyPressTime; % to save a temporary variable
-keysTmp = sp.keys;
-
 nHit = 0;
 nMiss = 0;
 RT = [];
-
 sp.fixTargetFlipTime = sp.frameFlipTime(fixTargetIdx);
+
 for i = fixTargetIdx
-    flipTime = frameFlipTime(i); % flip time of that frame
-    keyIdx = find(keyPressTimeTmp>flipTime & keyPressTimeTmp <= flipTime+reactWindow);
+    flipTime = sp.frameFlipTime(i); % flip time of that frame
+    keyIdx = find(sp.keyPressTime>flipTime & sp.keyPressTime<= flipTime+reactWindow);
     if isempty(keyIdx)
         nMiss = nMiss + 1; % no response in this time window
     else
@@ -34,13 +31,8 @@ for i = fixTargetIdx
                 
         % get the RT, keyPressTime - flipTime. We only consider the 1st
         % button press within the window.
-        RT = [RT keyPressTimeTmp(keyIdx(1))-flipTime];
+        RT = [RT sp.keyPressTime(keyIdx(1))-flipTime];
         
-        % and then we delete this key press to avoid it can be then counted
-        % in another trial. So the earlier responses should assgined to
-        % early trials.
-        keyPressTimeTmp = deleteel(keyPressTimeTmp, keyIdx(1));
-        keyCodeTmp = deleteel(keyCodeTmp, keyIdx(1));
         % ====== This part can be modified ==============
     end
 end

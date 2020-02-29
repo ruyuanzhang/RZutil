@@ -105,11 +105,11 @@ switch monitorname
         mp.gamma = 1;
     case 'nih7t' 
         mp.monitorName = 'nih7t';
-        mp.size = [23, 18];  % cm
-        mp.resolution = [800, 600]; % pixels
+        mp.size = [33.9852, 19.5072];  % cm
+        mp.resolution = [1920, 1080]; % pixels
         mp.refreshRate = 60; % hz
         mp.viewDist = 64; % cm, 2ft
-        mp.pixPerDeg = (mp.resolution(1)/2)./ atand(mp.size(1)/2./mp.viewDist); %pix/deg
+        mp.pixPerDeg = (mp.resolution(2)/2)./ atand(mp.size(2)/2/mp.viewDist); %pix/deg
         mp.pixPerArcmin = mp.pixPerDeg/60; %pix/arcmin
         mp.gamma = 1;        
     case 'nihofficedesk' 

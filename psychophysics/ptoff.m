@@ -9,6 +9,9 @@ function ptoff(oldclut)
 % and closing all PsychToolbox windows. we also attempt to
 % close out the stereo-related stuff.
 %
+% Note that in an fMRI experiment, you need to close all made textures
+% BEFORE you call ptoff, otherwise it might report error.
+%
 % use in conjunction with pton.m.
 %
 % example:

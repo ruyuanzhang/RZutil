@@ -1,3 +1,3 @@
 
 function ll()
-    ls -al;
+    ls -ahl;
