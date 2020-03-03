@@ -72,7 +72,6 @@ switch monitorname
         mp.pixPerDeg = (mp.resolution(1)/2)./ atand(mp.size(1)/2./mp.viewDist); %pix/deg
         mp.pixPerArcmin = mp.pixPerDeg/60; %pix/arcmin
         mp.gamma = 1;
-    
     case 'uminnmacpro'
         mp.monitorName = 'uminmacpro';
         mp.size = [36, 29];  % width, height cm
@@ -120,7 +119,9 @@ switch monitorname
         mp.viewDist = 70; % cm
         mp.pixPerDeg = (mp.resolution(1)/2)./ atand(mp.size(1)/2./mp.viewDist); %pix/deg
         mp.pixPerArcmin = mp.pixPerDeg/60; %pix/arcmin
-        mp.gamma = 1;        
+        mp.gamma = 1;
+    case 'nihlaptop'
+        
     otherwise
         error('Can not find the monitor file !')
 

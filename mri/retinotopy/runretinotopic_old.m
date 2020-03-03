@@ -1,4 +1,4 @@
-function runretinotopic_old(expNo, subjNo)
+%function runretinotopic_old(expNo, subjNo)
 % This is the program to run retinotopic mapping conventional checkerboard
 % method. Check runretinotopic.m written by KK for more advanced PRF
 % approach. 
@@ -16,7 +16,7 @@ function runretinotopic_old(expNo, subjNo)
 % to the beginning and the end of each run. A run lasts 300s = 5min.
 %
 % Checkerboard is default 1080 x 1080 pixels. But we set movieRect dimension
-% as height of a monitor (i.e., winRect(4)). CheckerBoard flickers at
+% as height of a monitor (i.e., sp.winRect(4)). CheckerBoard flickers at
 % <flickerRate, 5> HZ. by default. There are <nCheckerRing, 16> rings and 
 % <nCheckerWedge, 16> steps of wedges on the checkerboard.
 % 
@@ -52,6 +52,7 @@ function runretinotopic_old(expNo, subjNo)
 %   3. Write about output.
 %
 % History:
+%   20200303 RZ change the code to used mri_xxx auxiliary functions
 %   20200228 RZ fixed some bugs in auxililary function. Also set default
 %       dimension to 1080 and default ring numbers <sp.nCheckerRing> on
 %       checkerboard images to 16;
@@ -66,21 +67,25 @@ if notDefined('subjNo')
     subjNo = 99;
 end
 
+sp.triggerKey = 't'; % the key to start the experiment
+
 sp.expNo = expNo;
 sp.subjNo = subjNo;
+
 %% Some high-level controls
 
 % Experiment 
+sp.stimDur = 8; % secs, duration for each stimulus;
+sp.nCycle = 4; % How many wedge or ring cycles, should be times of 4
+% This number should be even for this experiment as we alternate CCW and CW cycles
 sp.blankBeginEnd = 16; % secs, blank at begining and end
 sp.cycleITI = 4; % secs, interval between two consecutive cycles
+
 % How many monitor freshes per movie frame.
 sp.flickerRate = 5; % HZ, how many flickers in a secs.
 sp.freshRate = 60; % monitor refresh rate
 % note that here we fixed stimDur and cycles to make sure the whole
 % experiment lasts 300 secs
-sp.stimDur = 8; % secs, duration for each stimulus;
-sp.nCycle = 4; % How many wedge or ring cycles.
-% This number should be even for this experiment as we alternate CCW and CW cycles
 
 % Stimulus parameters
 sp.nWedgeStep = 8; % how many steps for the wedge mask, from upper vertical to CCW direction
@@ -93,21 +98,19 @@ sp.nCheckerRing = 16;
 
 % How many wedges in the checkerboard stimuli, better to set it to the same
 % or times of sp.nWedgeStep
-sp.nCheckerWedge = 16; % how many checkerboard Ring, note this is not no of ring masks
-
+sp.nCheckerWedge = 32; % how many checkerboard Ring, note this is not No of ring masks
 
 %% Some calculations and setup
 sp.frameDur = 1/sp.flickerRate / 2 * sp.freshRate; % how many freshes per movie frame
 sp.nFramePerSec = sp.freshRate / sp.frameDur; % How many movie frames per sec
 
+% no need to get the monitor parameter here
 [sp.deviceNum, sp.deviceName] = GetKeyboardIndices;
 [sp.deviceNum, sp.deviceName] = deal(sp.deviceNum(end), sp.deviceName{end});
-
-sp.COLOR_BLACK = 0;
 sp.COLOR_GRAY = 127;
 sp.COLOR_WHITE = 254;
+sp.COLOR_BLACK = 0;
 
-sp.wantFormattedString = 1;
 sp.wantFrameFiles = 0; % 1, save some pictures for making demo video; 0, do not save
 
 %% Create stimuli
@@ -122,143 +125,80 @@ fprintf('done\n');
 % In this step, We create the 
 % sp.maskFrameOrder and sp.checkerFrameOrder to present stimulus
 % sp.fixColorOrder and sp.colors for fixation task
-sp = createframeorder(sp);
+sp = createframeorderretinotopic(sp);
 
 %% ========= window setup ===========
-commandwindow;
-HideCursor;
-[win, winRect, oldclut] = pton([],[],[],1); % for debug
-%[win, winRect, oldclut] = pton([],0.5,[],1);
-Screen('BlendFunction',win,GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
-mfi = Screen('GetFlipInterval',win);  % re-use what was found upon initialization!
-sp.fixSize = winRect(4) * 0.015;
+[sp.win, sp.winRect, sp.oldclut, sp.mfi] = pton([],[],[],1); % for debug
+sp.fixSize = sp.winRect(4) * 0.015;
 
 % calculate movieRect and fixation Rect
-movieRect = [0 0 winRect(4) winRect(4)]; % note here we default to set the dimension to monitor height
-sp.movieRect = CenterRect(movieRect,winRect);
-sp.fixRect = [winRect(3)/2-sp.fixSize/2 winRect(4)/2-sp.fixSize/2 winRect(3)/2+sp.fixSize/2 winRect(4)/2+sp.fixSize/2];
-sp.winRect = winRect;
+movieRectSize = min(sp.winRect(4), size(sp.checkerBoard, 1));
+movieRect = [0 0 movieRectSize movieRectSize]; % note here we default to set the dimension to monitor height
+sp.movieRect = CenterRect(movieRect,sp.winRect);
+sp.fixRect = [sp.winRect(3)/2-sp.fixSize/2 sp.winRect(4)/2-sp.fixSize/2 sp.winRect(3)/2+sp.fixSize/2 sp.winRect(4)/2+sp.fixSize/2];
 
 % We can premake the checkerboard texture because we only have a few images
 texture = zeros(1, size(sp.checkerBoard, 3));
 for iImg = 1:size(sp.checkerBoard, 3)
-    texture(iImg) = Screen('MakeTexture', win, sp.checkerBoard(:,:,iImg));
+    texture(iImg) = Screen('MakeTexture', sp.win, sp.checkerBoard(:,:,iImg));
 end
 % We can also premake the mask texture
 maskTex = zeros(1, size(sp.masks, 3));
 for iImg = 1:size(sp.masks, 3)
     grayImg = uint8(ones(size(sp.masks,1),size(sp.masks,2))*sp.COLOR_GRAY);
     tmp = cat(3, grayImg, uint8(255-sp.masks(:,:,iImg)*255));
-    maskTex(iImg) = Screen('MakeTexture', win, tmp);
+    maskTex(iImg) = Screen('MakeTexture', sp.win, tmp);
 end
 
+% make sure to input the texture you make here to mri_cleanupafterloop.m
+% in order to close all of them.
 
-%% MRI related preparation
-% some auxillary variables
-sp.frameFlipTime = [];
-sp.triggerKey = '5%'; % the key to start the experiment
-
-welcomeText = ['<color=0.,0.,0.>Press "5" to start the experiment\n'...
-    'Press "1" to respond when the fixation turns red\n' ...
-    'IMPORTANT! Please always keep your eye fixation on the central point of the screen throughout the experiment!'];
-
-% show welcome text or instruction
-Screen('FillRect', win, sp.COLOR_GRAY, winRect);
-Screen('TextSize',win,30);Screen('TextFont',win,'Arial');
-if sp.wantFormattedString
-    DrawFormattedText2(...
-         welcomeText,...
-        'win',win,'sx','center','sy','center','xalign','center','yalign','center','xlayout','center');
-end
-Screen('Flip',win);
-
-%% Show some experiment information for diagnostic purposes
-% We output some auxilllary information about the experiment.
-fprintf('\nThe expName is %s \n', sp.expName);
-fprintf('Each stimulus is %d sec, %d cycles in total. %d s between two cycles, %ds blank at beginning and end.\n',sp.stimDur, sp.nCycle, sp.cycleITI, sp.blankBeginEnd);
-fprintf('The whole run will last %d secs.\n', sp.totalSecs);
-fprintf('Checkerboard will flicker at %d HZ.\n', sp.flickerRate);
-fprintf('%.3f s per movie frame.\n', 1/sp.nFramePerSec);
-fprintf('We listen input from device No. %d, %s \n', sp.deviceNum, sp.deviceName);
-
-% print window information
-fprintf('\nOpen window No. %d, winRect width %d height %d pixels. \n', win, winRect(4), winRect(3));
-fprintf('Monitor flip interval is %.6f. \n', mfi);
-
-fprintf('\npress a key to begin the movie. (make sure to turn off network, energy saver, spotlight, software updates! mirror mode on!)\n');
-
-
-%% trigger the experiment
-getkeyresp(sp.triggerKey, -3); % get key respond and trigger the experiment.
-fprintf('Experiment starts!\n');
-Screen('Flip',win);
-% issue the trigger and record it
+%% Show welcome interface
+sp.welcomeTxt = sprintf(['<color=1,1,1>Press "%s" key to start the experiment.\n Press button when fixation turns red\n', ...
+'IMPORTANT!Please keep your eye on the fixation throughout the entire experiment!'], sp.triggerKey);
+sp=mri_showwelcometext(sp);
  
 %% now run the experiment
-flipStruct = struct(...
-    'win', win, ...
-    'when', 0, ...
-    'whendesired', 0, ...
-    'iti', sp.frameDur * mfi, ...
-    'mfi', mfi, ...
-    'glitchcnt',0 ...
-    );
-
-% initiate the kbQueue
-KbQueueCreate(sp.deviceNum);
-KbQueueStart(sp.deviceNum);
-
+sp = mri_preparebeforeloop(sp);
 % do it;
 for iFrame = 1 :sp.nFrame
     
+    if sp.getoutEarly
+        sca;
+        commandwindow;
+        ShowCursor;
+        return;
+    end
+    
+    Screen('FillRect', sp.win, sp.COLOR_GRAY, sp.winRect);
     % draw images
     if sp.checkerFrameOrder(iFrame) ~= 0
-        Screen('DrawTexture', win, texture(sp.checkerFrameOrder(iFrame)), [], sp.movieRect, 0, [], 1);
+        Screen('DrawTexture', sp.win, texture(sp.checkerFrameOrder(iFrame)), [], sp.movieRect, 0, [], 1);
         % apply mask
-        Screen('DrawTexture', win, maskTex(sp.maskFrameOrder(iFrame)), [], sp.movieRect, 0, [], 1);
+        Screen('DrawTexture', sp.win, maskTex(sp.maskFrameOrder(iFrame)), [], sp.movieRect, 0, [], 1);
         
     end
     
     % draw fixation
-    Screen('FillOval', win, sp.fixColors(sp.fixColorOrder(iFrame), :), sp.fixRect);
+    Screen('FillOval', sp.win, sp.fixColors(sp.fixColorOrder(iFrame), :), sp.fixRect);
     
-    % flip the window and update the flipStruct   
-    [flipTime, flipStruct] = updateflip(flipStruct);
-    sp.frameFlipTime = [sp.frameFlipTime flipTime]; % record the frameFlipTime
+    % control flip and get response
+    sp = mri_updateflipresp(sp);
     
 %     % save images to make demo video
 %     if sp.wantFrameFiles
-%         image=Screen('GetImage', win, sp.movieRect);
+%         image=Screen('GetImage', sp.win, sp.movieRect);
 %         imwrite(image,sprintf('./frameimg/frame%03d.png',iFrame));
 %     end
     
 end
-KbQueueStop(sp.deviceNum); % stop listen the keyboard
-Screen('Close', texture); % you need to close all texture before you call ptoff
-Screen('Close', maskTex); % you need to close all texture before you call ptoff
-ptoff(oldclut);
-ShowCursor;
+sp=mri_cleanupafterloop(sp, texture, maskTex); % should input all texture index so we can close
 
-%%
-% extract keyboard event
-[sp.keys, sp.keyPressTime, sp.keyCode] = getkeyboardevent(sp.deviceNum); % remember to extract the event before release kbqueue
-KbQueueRelease(sp.deviceNum); % release KbQueueRelease
-KbReleaseWait(sp.deviceNum);
-
-sp.keyPressTime = sp.keyPressTime - sp.frameFlipTime(1); % reference to the onset of the first movie frame
-sp.frameFlipTime = sp.frameFlipTime - sp.frameFlipTime(1);
-sp.realRunTime = sp.frameFlipTime(end) + sp.frameDur * mfi;
-fprintf('\nThis run took %.4f secs, the desired time is %.4f secs \n', sp.realRunTime, sp.totalSecs);
-
-% Visualize timing information
-myplot(1:length(sp.frameFlipTime)-1, diff(sp.frameFlipTime));
-xlabel('Frame');ylabel('Frame duration (secs)');
-
-% analyze behavioral data and visualize
-analyzebehaviorretinotopic;
+%% analyze timing and behavioral resonse
+sp=mri_analyzetimebehavior(sp);
 
 %% clean up and save data
 filename=sprintf('%s_retinotopy%s_subj%02d', datestr(now, 'yyyymmddHHMMSS'), sp.expName, sp.subjNo);
 save(filename); % save everything to the file;
 
-end
+%end

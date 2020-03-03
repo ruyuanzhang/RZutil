@@ -13,6 +13,9 @@ function [keys, keyPressTime, keyCode] = getkeyboardevent(deviceIdx, triggerKey)
 % Note that we ignore the key release events as we only care the key press.
 % And <keyPressTime> is the machine time returned by GetSecs. To get
 % reaction time, they should be substructed an reference time point.
+%
+% 20200303 RZ now seperate this functionality to mri_updateflipresp and
+% mri_analyzetimebehavior
 
 if notDefined('deviceIdx')
     error('You must provide the device index used in kbqueue!');

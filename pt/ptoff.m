@@ -28,6 +28,9 @@ end
 Screen('Close',win);
 Screen('CloseAll');
 
+ShowCursor;
+Priority(0);
+
 % deal with stereo stuff
 try 
   if Datapixx('IsViewpixx3D')

@@ -1,10 +1,13 @@
 % This script is a demo to quickly analyze behavioral data. To analyze, we
 % need all target frame index, all key presses and all key press timings.
 %
-%
+% 
 % To do:
 %   1. implement false alarm??
 %
+% New
+%   This functionality has been integrated into multiple mri auxiliary
+%   functions..
 
 reactWindow = 3; % secs, allowed time window to reponse after stimulus onset, other wise count as miss.
 fixTargetIdx = find(sp.fixTargetOnset);

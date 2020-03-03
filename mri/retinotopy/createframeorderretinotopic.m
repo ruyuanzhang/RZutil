@@ -94,11 +94,5 @@ sp.fixRate = 10; % 10 movie frames per fixation
 sp.fixNColor = 5; % number of unique fix colors
 sp.fixTargetAprt = 30; % two consecutive targets should be at
 % least 30 frames apart
-[sp.fixColorOrder, sp.fixColors]=createfixtask(sp.nFrame, 5, 10, 30, 20);
+[sp.fixColorOrder, sp.fixColors, sp.targetFrameOnset]=createfixtask(sp.nFrame, 5, 10, 30, 20);
 % 20 color items, which lead to on average 20 * 10 (fixrate) = 200 frames = 20s per target.
-
-% Create a target flag for behavioral analysis
-tmp = find(sp.fixColorOrder==1);
-sp.fixTargetOnset = zeros(1,sp.nFrame);
-sp.fixTargetOnset(tmp(diff(tmp)~=1)-(sp.fixRate-1)) = 1;
-
