@@ -1,4 +1,4 @@
-function [rs_keys, secs] = getkeyresp(targetKeys,KbNum)
+function [rs_keys, secs] = getkeyresp(targetKeys,KbNum, wantKeyIdx)
 % function [rs_keys, secs] = getkeyresp(targetKeys,KbNum)
 % Wait for key press and then proceed to next step. Note that we can input
 % a key list 
