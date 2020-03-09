@@ -1,4 +1,4 @@
-function designMat=createdm(timePoint,stimCond,numTR,condNum)
+function designMat=createdesignmat(timePoint,stimCond,numTR,condNum)
 %designMat=createdm(timePoint,condition,numTr,conditionNumber,)
 % create design matrix, output is a sparse double matrix
 % Input:

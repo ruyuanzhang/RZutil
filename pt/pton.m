@@ -1,4 +1,4 @@
-function oldclut = pton(resolution,winsize,clutfile,skipsync,wantstereo)
+function [win, rect, oldclut, mfi] = pton(resolution,winsize,clutfile,skipsync,wantstereo)
 
 % function oldclut = pton(resolution,winsize,clutfile,skipsync,wantstereo)
 %
@@ -37,6 +37,7 @@ function oldclut = pton(resolution,winsize,clutfile,skipsync,wantstereo)
 %   we don't rely on any java stuff.
 %
 % history:
+% 2020/03/03 - RZ add some auxiliary information
 % 2018/05/26 - add <wantstereo> input
 % 2011/10/13 - now always generate a CLUT at 8-bit (256 rows).
 %
@@ -94,7 +95,7 @@ if ~isempty(resolution)
 end
 
 % set the sync
-Screen('Preference','SkipSyncTests',skipsync);c
+Screen('Preference','SkipSyncTests',skipsync);
 
 % open a window and fill with gray
 if isempty(winsize)
@@ -150,6 +151,17 @@ end
 KbName('UnifyKeyNames');
 
 
+%% set blend mode, add by RZ
+Screen('Preference', 'Verbosity', 1); % only output severe error message;
+Screen('BlendFunction',win,GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+mfi = Screen('GetFlipInterval',win);  % the true time of per monitor frame
+commandwindow;
+HideCursor;
+Priority(MaxPriority(win));
+
+sp.COLOR_GRAY = 127;
+sp.COLOR_WHITE = 254;
+sp.COLOR_BLACK = 0;
 
 
 % SCRATCHPAD:
