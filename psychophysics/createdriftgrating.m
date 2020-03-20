@@ -88,7 +88,7 @@ p.motion_step = (0:p.mvLength-1)*p.TFstep + motion_step;
 for i = 1:p.mvLength
     driftGratingImg(:,:,i) = round(((sin(a*xx+b*yy+p.motion_step(i)).*spatialMask*p.amplitude*p.temporalMask(i))+p.background));
     if ~isempty(p.windowPtr)
-        driftGratingMovie{i}=Screen('MakeTexture', p.windowPtr, driftGratingImg(:,:,i));
+        driftGratingMovie(i)=Screen('MakeTexture', p.windowPtr, driftGratingImg(:,:,i));
     end
 end
 %% output should be a struct

@@ -1,4 +1,4 @@
-function mp = getmonitorparams(monitorname,varargin)
+function mp = getmonitorparams(monitorname, varargin)
 % function getmonitorparams(monitorname)
 %
 % Similar to the concept of monitor center in psychopy, we define a unified
@@ -121,7 +121,14 @@ switch monitorname
         mp.pixPerArcmin = mp.pixPerDeg/60; %pix/arcmin
         mp.gamma = 1;
     case 'nihlaptop'
-        
+        mp.monitorName = 'nihlaptop';
+        mp.size = [33, 20.7];  % cm
+        mp.resolution = [1440, 900]; % pixels
+        mp.refreshRate = 73; % hz
+        mp.viewDist = 50; % cm
+        mp.pixPerDeg = (mp.resolution(1)/2)./ atand(mp.size(1)/2./mp.viewDist); %pix/deg
+        mp.pixPerArcmin = mp.pixPerDeg/60; %pix/arcmin
+        mp.gamma = 1;
     otherwise
         error('Can not find the monitor file !')
 

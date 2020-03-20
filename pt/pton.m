@@ -1,4 +1,4 @@
-function [win, rect, oldclut, mfi] = pton(resolution,winsize,clutfile,skipsync,wantstereo)
+function [win, rect, oldclut, mfi] = pton(resolution, winsize, clutfile, skipsync, wantstereo)
 
 % function oldclut = pton(resolution,winsize,clutfile,skipsync,wantstereo)
 %
@@ -65,6 +65,7 @@ end
 ptoff;
 
 % make sure things are sane
+PsychDefaultSetup(2);
 AssertOpenGL;
 
 % which screen will we be operating upon?
@@ -113,6 +114,7 @@ if wantstereo
   SetStereoBlueLineSyncParameters(win, rect(4)+10);
 else
   [win,rect] = Screen('OpenWindow',screennum,127,rect);
+  %[win,rect] = Screen('OpenWindow',1,127,rect);
 end
 
 % record the current clut

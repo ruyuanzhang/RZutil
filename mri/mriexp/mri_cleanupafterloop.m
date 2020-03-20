@@ -1,20 +1,12 @@
-function sp=mri_cleanupafterloop(sp, varargin)
-% an auxiliary function, close texture and window, close and release kbqueue
-% 
-% <varargin> is the variable input for all textures made before. before we
-% call ptoff, we should first close all textures;
+function sp=mri_cleanupafterloop(sp)
+% an auxiliary function, close texture and window, close and release kbqueue 
 
 % stop and release the kbqueue
 KbQueueStop(sp.deviceNum);
 KbQueueRelease(sp.deviceNum);
 KbReleaseWait(sp.deviceNum);
 
-% close all textures made before call ptoff
-for i=1:numel(varargin)
-    Screen('Close', varargin{i}); % you need to close all texture before you call ptoff
-end
-
-ptoff(sp.oldclut);
+ptoff(sp.oldclut, sp.win);
 Priority(0);
 commandwindow;
 ShowCursor;

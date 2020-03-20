@@ -81,6 +81,7 @@ while 1
             if evt.Pressed
                 flipStruct.keyCode = [flipStruct.keyCode evt.Keycode];
                 flipStruct.keyPressTime = [flipStruct.keyPressTime evt.Time];
+                %KbName(flipStruct.keyCode(end)) % for debug
             end
         end
         
@@ -109,8 +110,10 @@ else
     % since we keep resetting to the empirical VBLTimestamp.
     flipStruct.whendesired = flipStruct.frameFlipTime(end) + flipStruct.iti;
 end
-flipStruct.when = flipStruct.whendesired - flipStruct.mfi * (9/10);  % should we be less aggressive??
-        
+%
+flipStruct.when = flipStruct.whendesired - flipStruct.mfi * (1/2);  
+% KnK uses 9/10 (seems too aggresive). RZ use 3/4 here. 3/4 is also used in
+% psychopy
 
 % update flip struct        
 sp.flipStruct = flipStruct;

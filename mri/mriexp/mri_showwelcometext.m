@@ -25,7 +25,7 @@ fprintf('We listen input from device No. %d, %s \n', sp.deviceNum, sp.deviceName
 fprintf('\nOpen window No. %d, winRect width %d height %d pixels. \n', sp.win, sp.winRect(3), sp.winRect(4));
 fprintf('Monitor flip interval is %.6f. \n', sp.mfi);
 
-fprintf('\npress a key to begin the movie. (make sure to turn off network, energy saver, spotlight, software updates! mirror mode on!)\n');
+fprintf(sprintf('\npress "%s" to start the experiment. (make sure to turn off network, energy saver, spotlight, software updates! mirror mode on!)\n', sp.triggerKey));
 
 %% trigger the exp
 getkeyresp(sp.triggerKey, -3); % get key respond and proceed
