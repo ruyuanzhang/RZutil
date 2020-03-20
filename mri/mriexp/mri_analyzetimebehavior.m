@@ -10,7 +10,7 @@ function sp=mri_analyzetimebehavior(sp)
 %% analyze movie frame timing
 sp.frameFlipTime = sp.flipStruct.frameFlipTime;
 sp.expStartTime = sp.frameFlipTime(1);
-sp.frameFlipTime = sp.frameFlipTime - sp.expStartTime(1); % referece to the onset time of the first frame
+sp.frameFlipTime = sp.frameFlipTime - sp.expStartTime; % referece to the onset time of the first frame
 sp.realRunTime = sp.frameFlipTime(end) + sp.frameDur * sp.mfi;
 fprintf('\nThis run took %.4f secs, the desired time is %.4f secs \n', sp.realRunTime, sp.totalSecs);
 
@@ -28,7 +28,7 @@ sp.keys = KbName(sp.keyCode);
 
 % Remove trigger key, if any
 idx = find(~strcmp(sp.triggerKey, sp.keys));
-if ~isempty(idx)
+if ~isempty(idx) && ~isempty(sp.keys) 
     sp.keys = sp.keys(idx);
     sp.keyPressTime = sp.keyPressTime(idx);
 else
@@ -88,6 +88,7 @@ fprintf('Min RT is %.3f ms, max RT is %.3f ms, median RT is %.3f ms\n', min(RT)*
 % Visualize target onset and behavioral response
 figure();
 set(gcf, 'Units','normalized', 'Position', [0.2 0.3 0.5 0.2]);
-straightline(sp.targetFlipTime, 'v', 'r-');
-text(sp.keyPressTime, ones(1,length(sp.keyPressTime)) , sp.keys);
+l=straightline(sp.targetFlipTime, 'v', 'r-');
+text(sp.keyPressTime, ones(1,length(sp.keyPressTime)) , sp.keys, 'FontSize', 10, 'FontWeight', 'normal', 'FontName', 'Arial');
+legend(l(1), {'Target Onset'}, 'location', 'northeast');
 xlim([0 sp.realRunTime]); xlabel('Exp time (secs)');

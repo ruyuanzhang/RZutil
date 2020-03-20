@@ -1,4 +1,4 @@
-function ptoff(oldclut)
+function ptoff(oldclut, win)
 
 % function ptoff(oldclut)
 %
@@ -19,9 +19,11 @@ function ptoff(oldclut)
 if ~exist('oldclut','var') || isempty(oldclut)
   oldclut = [];
 end
+if ~exist('win','var') || isempty(win)
+  win = Screen('Windows');
+end
 
 % do it
-win = Screen('Windows');
 if ~isempty(oldclut)
   Screen('LoadNormalizedGammaTable',win,oldclut);
 end
