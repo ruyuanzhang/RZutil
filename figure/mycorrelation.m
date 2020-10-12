@@ -23,6 +23,7 @@ function [cah, sstruct] = mycorrelation(data1,data2,varargin)
 %       confinterval: a scalar between 0~1, default:0.68
 %       labels   : lables for data 1 and data 2, default {'data1','data2'};
 %       linerange: the range of the linear line; default: axex limits;
+%       lineonly: boolean, only plot the line
 %       color: color for dot and line,default:[0    0.4470    0.7410],the
 %           first color (light blue color) for default colororder.
 %       degree: degree of poly fit, default:1, linear regression.
@@ -31,6 +32,7 @@ function [cah, sstruct] = mycorrelation(data1,data2,varargin)
 %           to plot errobar. se can also be 2 x N where the first row
 %           has values for the lower bound and the second row has values
 %           for the upper bound.
+%       lineonly: boolean, True, only plot the line
 %           
 % Outputs:
 %       cah:        figure axes handle
@@ -49,6 +51,7 @@ function [cah, sstruct] = mycorrelation(data1,data2,varargin)
 %   doubled, not sure why? bugs??
 %
 % History:
+% 03/30/20, RZ add lineonly option
 % 04/27/17, RZ added errorbar to both direction
 % 04/26/17, RZ implemented the confidence interval patch
 % 06/04/16, wrote the function
@@ -102,11 +105,11 @@ end
 set(cah,'tag','Correlation Plot');
 % some settings
 markersize = 8;
+
 %% consider the nan case
 ind = ~(isnan(data1)|isnan(data2));
 data1 = data1(ind);
 data2 = data2(ind);
-
 
 %% Correlation
 
@@ -114,6 +117,7 @@ data2 = data2(ind);
 hold(cah,'on');
 axes(cah);
 ph = myplot(data1,data2,[],'o','Color',options.color,'MarkerSize',markersize,'tag','correlation dot');
+
 % add errorbar
 f1=[];
 f2=[];
@@ -132,7 +136,7 @@ end
 % Linear regression
 [polyCoefs, S] = polyfit(data1,data2,options.degree);
 [r, p] = corrcoef(data1,data2); r = r(1,2); p = p(1,2);
-rho = corr(data1,data2,'type','spearman');
+rho = corr(data1(:),data2(:),'type','spearman');
 N = length(data1);
 SSE = sqrt(sum((polyval(polyCoefs,data1)-data2).^2)/(N-2));
 a = axis(cah);
