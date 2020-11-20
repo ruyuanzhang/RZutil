@@ -7,7 +7,7 @@ function [randcondmat, condmat]=getranddesign(trialnum,expcond)
 %   trialnum: Total number of trial in this block, we assumed total trial
 %       number could be fully divided by exp condition number
 %   expcond: a scaler or an array of experiment condition. i.e. there are 4
-%           speed levels, 5 directions,3 locations.The expcond=[4 5 3].
+%           speed levels, 5 directions, 3 locations.The expcond=[4 5 3].
 %
 %   
 % Output:
