@@ -37,6 +37,7 @@ end
 % props.setProperty('mail.smtp.socketFactory.port','465');
 
 %% 163 mail
+%password = NEOXFTRMRNDFPVBA; % 163 passord
 mail = 'fenbukaide@163.com';
 setpref('Internet','E_mail',mail);
 setpref('Internet','SMTP_Server','smtp.163.com'); % ?SMTP???
